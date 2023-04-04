@@ -1,0 +1,7 @@
+--Use this file to track database changes--
+--Example
+--4/3/23
+--create table example table (
+--  PrimaryId int auto-increment, 
+--  Name varchar(25)
+--)
