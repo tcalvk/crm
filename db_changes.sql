@@ -8,8 +8,9 @@
 --Status = updated
 
 4/6/23
-update Customer 
-set email = 'tannerklein5@icloud.com'
+update Customer set email = 'tannerklein5@icloud.com'
+status = updated 
 
 4/6/23
 UPDATE `Customer` SET `City` = 'American Fork' WHERE `Customer`.`CustomerId` = 1
+status = updated 
