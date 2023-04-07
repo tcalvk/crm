@@ -5,3 +5,11 @@
 --  PrimaryId int auto-increment, 
 --  Name varchar(25)
 --)
+--Status = updated
+
+4/6/23
+update Customer 
+set email = 'tannerklein5@icloud.com'
+
+4/6/23
+UPDATE `Customer` SET `City` = 'American Fork' WHERE `Customer`.`CustomerId` = 1

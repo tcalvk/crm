@@ -11,7 +11,7 @@ require 'PHPMailer/src/SMTP.php';
 
 class EmailServer {
 
-    public function send_statement($email, $property_id, $date_file, $date_formatted, $company_name) {
+    public function send_statement($billing_email, $property_id, $date_file, $date_formatted, $company_name) {
         $mail = new PHPMailer(true);
         //Server settings
         $mail->SMTPDebug = SMTP::DEBUG_SERVER;                 
@@ -29,7 +29,7 @@ class EmailServer {
         $mail->setFrom('corsaire.tech@gmail.com', 'Account Services');
 
         //Recipients
-        $mail->addAddress($email);    
+        $mail->addAddress($billing_email);    
     
         //Content
         $mail->isHTML(true);                             
