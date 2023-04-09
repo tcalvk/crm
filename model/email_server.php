@@ -48,9 +48,34 @@ class EmailServer {
 
         return true;
     }
+    public function send_code($code, $email) {
+        $mail = new PHPMailer(true);
+        //Server settings
+        $mail->SMTPDebug = SMTP::DEBUG_SERVER;                 
+        $mail->isSMTP();                                   
+        $mail->Host       = 'smtp.gmail.com';                    
+        $mail->SMTPAuth   = true;                                  
+        $mail->Username   = 'corsaire.tech@gmail.com';                    
+        $mail->Password   = 'jdvmznndcbujihhd';                              
+        $mail->SMTPSecure = 'tls';         
+        $mail->Port       = 587;   
+        $mail->SMTPDebug = 1;
+        $mail->setFrom('corsaire.tech@gmail.com', 'Corsaire Tech Account Services');
+
+        //Recipients
+        $mail->addAddress($email);    
+    
+        //Content
+        $mail->isHTML(true);                             
+        $mail->Subject = 'MealPlan Verification Code';
+        $mail->Body    = 'Here is your requested verification code: ' . $code;
+        $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+    
+        $mail->send();
+
+        $_SESSION["code"] = $code;
+        return true;
+    }
 }
-
-
-
 
 ?>
