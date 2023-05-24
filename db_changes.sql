@@ -30,15 +30,23 @@ status = updated
 alter table Contract
 add TotalPaymentsDue int after NumPaymentsDue
 
+status = updated 
+
 4/7/23
 alter table Property
 add Name varchar(64) after PropertyId 
 
+status = updated 
+
 4/7/23
 UPDATE `Property` SET `Name` = 'The UPS Store #6054', `Address2` = '' WHERE `Property`.`PropertyId` = 2
 
+status = updated 
+
 4/7/23
 UPDATE `Property` SET `Name` = 'The UPS Store #5517', `Address2` = '' WHERE `Property`.`PropertyId` = 3
+
+status = updated 
 
 4/7/23
 create table LogFixedPayments (
@@ -52,6 +60,8 @@ create table LogFixedPayments (
     foreign key (ContractId) references Contract(ContractId)
 )
 
+status = updated 
+
 4/8/23
 create table Statements (
     StatementNumber int AUTO_INCREMENT,
@@ -63,9 +73,13 @@ create table Statements (
     foreign key (ContractId) references Contract(ContractId)
 )
 
+status = updated 
+
 4/8/23
 alter table Statements 
 add PaidDate datetime after CreatedDate
+
+status = updated 
 
 4/8/23
 create table users (
@@ -75,3 +89,11 @@ create table users (
     password varchar(256),
     primary key (userId)
 )
+
+status = updated 
+
+5/22/23
+alter table Contract 
+add TestContract bit 
+
+status = updated 
