@@ -32,8 +32,7 @@ class ContractsDB {
                   left join Company cp on p.OwnedBy = cp.CompanyId
                   left join Customer ct on c.CustomerId = ct.CustomerId
                   where c.ContractType = "Fixed"
-                  and c.StatementSendDate = 1
-                  and c.TestContract = 1';
+                  and c.StatementSendDate = 1';
         $statement = $db->prepare($query);
         $statement->execute();
         $contracts = $statement->fetchAll();
