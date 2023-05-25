@@ -49,6 +49,7 @@ $cam = $contract['CAM'];
 $total = $contract['Total'];
 $property_name = $contract['PropertyName'];
 $num_payments_due = $contract['NumPaymentsDue'];
+$payment_number = $contract['TotalPaymentsDue'] - $contract['NumPaymentsDue'] + 1;
 $total_payments_due = $contract['TotalPaymentsDue'];
 $contract_id = $contract['ContractId'];
 
@@ -72,7 +73,7 @@ $html = str_replace("{{BillingEmail}}", $billing_email, $html);
 $html = str_replace("{{BaseAmt}}", $base_amt, $html);
 $html = str_replace("{{CAM}}", $cam, $html);
 $html = str_replace("{{Total}}", $total, $html);
-$html = str_replace("{{PaymentNumber}}", $num_payments_due, $html);
+$html = str_replace("{{PaymentNumber}}", $payment_number, $html);
 $html = str_replace("{{TotalPaymentsDue}}", $total_payments_due, $html);
 $html = str_replace("{{PropertyName}}", $property_name, $html);
 
