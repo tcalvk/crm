@@ -7,11 +7,13 @@ require 'model/email_server.php';
 require 'model/database.php';
 require 'model/contracts_db.php';
 require 'model/log_fixed_payments_db.php';
+require 'model/log_statements_db.php';
 use Dompdf\Dompdf;
 use Dompdf\Options;
 $email_server = new EmailServer;
 $contracts_db = new ContractsDB;
 $log_fixed_payments_db = new LogFixedPaymentsDB;
+$log_statements_db = new LogStatementsDB; 
 
 //For fixed contracts//
 // Get statement info 
@@ -90,6 +92,7 @@ $completed_date = date("Y-m-d");
 $new_payments_due = $num_payments_due - 1;
 $log_payment = $log_fixed_payments_db->subtract_payment($contract_id, $completed_date, $num_payments_due, $new_payments_due);
 $update_contract = $contracts_db->update_contract($contract_id, $new_payments_due);
+$log_statement = $log_statements_db->log_fixed_statement($invoice_number, $completed_date, $total, $payment_number, $contract_id);
 
 endforeach ; 
 

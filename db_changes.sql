@@ -97,3 +97,7 @@ alter table Contract
 add TestContract bit 
 
 status = updated 
+
+5/25/23
+alter table Statements 
+rename to LogStatements

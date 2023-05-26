@@ -6,10 +6,12 @@ require __DIR__ . "/vendor/autoload.php";
 require 'model/email_server.php';
 require 'model/database.php';
 require 'model/contracts_db.php';
+require 'model/log_statements_db.php';
 use Dompdf\Dompdf;
 use Dompdf\Options;
 $email_server = new EmailServer;
 $contracts_db = new ContractsDB;
+$log_statements_db = new LogStatementsDB;
 
 // Get statement info
 $contracts = $contracts_db->get_evergreen_15();
@@ -75,6 +77,12 @@ file_put_contents("statements/" . "property" . $property_id . "_" . $date_file .
 unset($pdf);
 
 $send_email = $email_server->send_statement($billing_email, $property_id, $date_file, $date_formatted, $company_name);
+
+// Log the statement in the database
+$completed_date = date("Y-m-d");
+$contract_id = $contract['ContractId'];
+$log_statement = $log_statements_db->log_evergreen_statement($invoice_number, $completed_date, $total, $contract_id);
+
 
 endforeach ; 
 
