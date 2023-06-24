@@ -67,7 +67,7 @@ class EmailServer {
     
         //Content
         $mail->isHTML(true);                             
-        $mail->Subject = 'MealPlan Verification Code';
+        $mail->Subject = 'Corsaire CRM Verification Code';
         $mail->Body    = 'Here is your requested verification code: ' . $code;
         $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
     

@@ -20,17 +20,18 @@ if (!isset($_SESSION["logged_in"])) {
         $email = filter_input(INPUT_POST, 'email');
         $password = filter_input(INPUT_POST, 'password');
         $check_user = $users_db->login_user($email, $password);
-        if ($check_user = false) {
+        if ($check_user == false) {
             header("Location: login.php?message=Incorrect login credentials. Please try again.");
         } else {
-            header("Location: menu.php");
+            header("Location: homepage.php");
         }      
     } else if ($action == 'signup') {
         include 'signup.php';
     } else if ($action == 'login') {
         include 'login.php';
     } else if ($action == 'check_signup') {
-        $name = filter_input(INPUT_POST, 'name'); 
+        $first_name = filter_input(INPUT_POST, 'first_name'); 
+        $last_name = filter_input(INPUT_POST, 'last_name');
         $email = filter_input(INPUT_POST, 'email');
         $password = filter_input(INPUT_POST, 'password');
         // validate the email address for @ sign 
@@ -43,7 +44,7 @@ if (!isset($_SESSION["logged_in"])) {
                     header("Location: signup.php?message=There is already a user with that email address. Please try again.");
                 } else {
                     // save new user to db
-                    $create_user = $users_db->create_user($name, $email, $password);
+                    $create_user = $users_db->create_user($first_name, $last_name, $email, $password);
                     if ($create_user == true) {
                         header("Location: login.php?message=User account created. Please login.");
                     } else {

@@ -1,7 +1,3 @@
-<?php 
-$message = filter_input(INPUT_GET, 'message');
-?>
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,29 +13,21 @@ $message = filter_input(INPUT_GET, 'message');
     </head>
     <body>
         <div class="container">
-            <h2>Corsaire CRM</h2>
-            <h3>Login</h3>
-            <form action="index.php" method="post" class="aligned">
-                <input type="hidden" name="action" value="check_login">
-                <div class="form-row">
-                    <div class="form-group col-sm-12">
-                        <label for="email">Email:</label>
-                        <input type="text" class="form-control" id="email" name="email">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-sm-12">
-                        <label for="password">Password:</label>
-                        <input type="password" class="form-control" id="password" name="password">
-                    </div>
-                </div>
-                <input class="btn btn-primary" type="submit" value="Login">&nbsp; &nbsp;
-                <a href="forgot_password.php">Forgot Password</a><br><br>
-                <a href="signup.php">Sign Up</a>
-            </form>
             <br>
+            <h3>Reset Password</h3>
+            <form action="index.php" method="post" class="aligned">
+                <input type="hidden" name="action" value="send_code">
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label for="email">Email:</label>
+                        <input class="form-control" type="text" class="text" name="email" id="email">
+                    </div>
+                </div>
+                <input class="btn btn-primary" type="submit" value="Send Reset Code">&nbsp; &nbsp;
+                <a href="login.php">Login Instead</a>
+            </form>
             <div>
-                <p class="text-danger"><?php echo $message; ?></p>
+                <p><?php echo $message; ?></p>
             </div>
         </div>
     </body>

@@ -39,13 +39,14 @@ class UsersDB {
             return false;
         }
     }
-    public function create_user($name, $email, $password) {
+    public function create_user($first_name, $last_name, $email, $password) {
         $hash = password_hash($password, PASSWORD_DEFAULT);
         $db = Database::getDB();
-        $query = 'insert into users (name, email, password)
-                 values (:name, :email, :password)';
+        $query = 'insert into users (firstname, lastname, email, password)
+                 values (:firstname, :lastname, :email, :password)';
         $statement = $db->prepare($query);
-        $statement->bindValue(':name', $name);
+        $statement->bindValue(':firstname', $first_name);
+        $statement->bindValue(':lastname', $last_name);
         $statement->bindValue(':email', $email);
         $statement->bindValue(':password', $hash);
         $statement->execute();

@@ -1,7 +1,11 @@
 <?php 
+session_start();
 $message = filter_input(INPUT_GET, 'message');
+$user_id = $_SESSION["userId"];
+if (!isset($_SESSION["can_change_password"])) {
+    header("Location: index.php");
+}
 ?>
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,30 +21,24 @@ $message = filter_input(INPUT_GET, 'message');
     </head>
     <body>
         <div class="container">
-            <h2>Corsaire CRM</h2>
-            <h3>Login</h3>
-            <form action="index.php" method="post" class="aligned">
-                <input type="hidden" name="action" value="check_login">
-                <div class="form-row">
-                    <div class="form-group col-sm-12">
-                        <label for="email">Email:</label>
-                        <input type="text" class="form-control" id="email" name="email">
+            <main>
+                <br>
+                <h3>Enter New Password</h3>
+                <form action="index.php" method="post" class="aligned">
+                    <input type="hidden" name="action" value="submit_password">
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label for="new_password">New Password:</label>
+                            <input class="form-control" id="new_password" type="password" class="text" name="new_password">
+                        </div>
                     </div>
+                    <input type="submit" value="Submit">&nbsp;
+                    <a href="login.php">Login Instead</a>
+                </form>
+                <div>
+                    <p><?php echo $message; ?></p>
                 </div>
-                <div class="form-row">
-                    <div class="form-group col-sm-12">
-                        <label for="password">Password:</label>
-                        <input type="password" class="form-control" id="password" name="password">
-                    </div>
-                </div>
-                <input class="btn btn-primary" type="submit" value="Login">&nbsp; &nbsp;
-                <a href="forgot_password.php">Forgot Password</a><br><br>
-                <a href="signup.php">Sign Up</a>
-            </form>
-            <br>
-            <div>
-                <p class="text-danger"><?php echo $message; ?></p>
-            </div>
+            </main>
         </div>
     </body>
 </html>
