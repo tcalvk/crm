@@ -102,6 +102,8 @@ status = updated
 alter table Statements 
 rename to LogStatements
 
+status = updated 
+
 5/28/23
 alter table users 
 drop column name;
@@ -111,3 +113,5 @@ add firstname varchar(128) after userId;
 
 alter table users
 add lastname varchar(128) after firstname;
+
+status = updated 
