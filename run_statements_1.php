@@ -8,12 +8,14 @@ require 'model/database.php';
 require 'model/contracts_db.php';
 require 'model/log_fixed_payments_db.php';
 require 'model/log_statements_db.php';
+require 'model/contact_db.php';
 use Dompdf\Dompdf;
 use Dompdf\Options;
 $email_server = new EmailServer;
 $contracts_db = new ContractsDB;
 $log_fixed_payments_db = new LogFixedPaymentsDB;
 $log_statements_db = new LogStatementsDB; 
+$contact_db = new ContactDB;
 
 //For fixed contracts//
 // Get statement info 
@@ -21,6 +23,22 @@ $contracts = $contracts_db->get_fixed_1();
 
 // Generate pdf 
 foreach ($contracts as $contract) :
+
+//Get the billing contacts
+$contract_id = $contract['ContractId'];
+$contacts = $contact_db->get_contacts($contract_id);
+
+///
+///Get the email addresses for the contacts
+////
+foreach ($contacts as $contact) : 
+    $emails_array[] = $contact['Email'];
+endforeach;
+
+$email_recipients = array_unique($emails_array);
+////
+////
+///
 
 $options = new Options;
 $options->setChroot(__DIR__);
@@ -86,7 +104,7 @@ $output = $pdf->output();
 file_put_contents("statements/" . "property" . $property_id . "_" . $date_file . ".pdf", $output);
 unset($pdf);
 
-$send_email = $email_server->send_statement($billing_email, $property_id, $date_file, $date_formatted, $company_name);
+$send_email = $email_server->send_statement($email_recipients, $property_id, $date_file, $date_formatted, $company_name);
 
 $completed_date = date("Y-m-d");
 $new_payments_due = $num_payments_due - 1;

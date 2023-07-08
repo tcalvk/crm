@@ -4,5 +4,6 @@
     </p>
     <p class="copyright">Version: 1.1</p>
 </footer>
+</div>
 </body>
 </html>

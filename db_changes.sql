@@ -115,3 +115,39 @@ alter table users
 add lastname varchar(128) after firstname;
 
 status = updated 
+
+7/4/23 
+alter table Customer 
+add userId int after Email 
+
+alter table Customer 
+add foreign key (userId) references users(userId)
+
+alter table users 
+add superuser bit after password 
+
+INSERT INTO `users` (`userId`, `firstname`, `lastname`, `email`, `password`, `superuser`) VALUES (NULL, 'Todd', 'Klein', 'toddcalvinklein@gmail.com', 'password', NULL);
+
+status = updated 
+
+7/7/23
+create table Contact ( ContactId int AUTO_INCREMENT, FirstName varchar(64), LastName varchar(64), Address1 varchar(256), Address2 varchar(256), City varchar(128), StateId varchar(12), Zip varchar(25), Phone varchar(20), Email varchar(256), CustomerId int, primary key (ContactId) );
+
+alter table Contact add foreign key (CustomerId) REFERENCES Customer(CustomerId);
+
+alter table Contact add ReceiveStatements bit after Email;
+
+
+insert into Property (Address1, City, StateId, Zip, OwnedBy) 
+values ('210 E Crossroads Blvd', 'Saratoga Springs', 'UT', 84045, 3)
+
+insert into Customer (Name, Address1, City, StateId, Zip, Phone) 
+values ('Franchise Management', '7650 S Redwood Rd', 'West Jordan', 'UT', '84084', '8018704177');
+
+insert into Contact (FirstName, LastName, Email, CustomerId) values ('AP', ' ', 'ap@frmwj.com', 5);
+insert into Contact (FirstName, LastName, Email, CustomerId) values ('Jack', ' ', 'jack@frmwj.com', 5);
+insert into Contact (FirstName, LastName, Email, CustomerId) values ('Robert', 'Anderson', 'robert.anderson@frmwj.com', 5);
+
+status = updated 
+
+

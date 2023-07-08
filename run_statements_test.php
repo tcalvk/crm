@@ -1,7 +1,4 @@
 <?php 
-///
-/// When executed, this php script will query and send all statements that are due to be sent on the 15th of each month. 
-///
 require __DIR__ . "/vendor/autoload.php";
 require 'model/email_server.php';
 require 'model/database.php';
@@ -16,7 +13,7 @@ $log_statements_db = new LogStatementsDB;
 $contact_db = new ContactDB;
 
 // Get statement info
-$contracts = $contracts_db->get_evergreen_15();
+$contracts = $contracts_db->get_test_contracts();
 
 // Generate pdf 
 foreach ($contracts as $contract) :
@@ -25,8 +22,8 @@ foreach ($contracts as $contract) :
 $contract_id = $contract['ContractId'];
 $contacts = $contact_db->get_contacts($contract_id);
 
-///
-///Get the email addresses for the contacts
+
+//Get the email addresses for the contacts
 ////
 foreach ($contacts as $contact) : 
     $emails_array[] = $contact['Email'];
@@ -35,7 +32,6 @@ endforeach;
 $email_recipients = array_unique($emails_array);
 ////
 ////
-///
 
 $options = new Options;
 $options->setChroot(__DIR__);
@@ -58,10 +54,10 @@ $company_zip = $contract['CompanyZip'];
 $billing_name = $contract['BillingName'];
 $attention = $contract['Attention'];
 $billing_address = $contract['BillingAddress1'] . $contract['BillingAddress2'] . $contract['BillingAddress3'];
+$billing_email = $contract['BillingEmail'];
 $billing_city = $contract['BillingCity'];
 $billing_state = $contract['BillingState'];
 $billing_zip = $contract['BillingZip'];
-$billing_email = $contract['BillingEmail'];
 $base_amt = $contract['BaseAmt'];
 $cam = $contract['CAM'];
 $total = $contract['Total'];
@@ -94,15 +90,14 @@ $output = $pdf->output();
 file_put_contents("statements/" . "property" . $property_id . "_" . $date_file . ".pdf", $output);
 unset($pdf);
 
-$send_email = $email_server->send_statement($email_recipients, $property_id, $date_file, $date_formatted, $company_name);
+$send_email = $email_server->send_statement_test($email_recipients, $property_id, $date_file, $date_formatted, $company_name);
 
 // Log the statement in the database
 $completed_date = date("Y-m-d");
 $contract_id = $contract['ContractId'];
 $log_statement = $log_statements_db->log_evergreen_statement($invoice_number, $completed_date, $total, $contract_id);
 
-
 endforeach ; 
 
-?>
 
+?>
