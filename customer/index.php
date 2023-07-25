@@ -25,10 +25,23 @@ if ($action == 'list_customers') {
     $customer_info = $customer_db->get_customer_info($customer_id);
     include 'view_customer.php';
 } else if ($action == 'edit_data') {
-    $data_type = filter_input(INPUT_POST, 'data_type');
-    $new_data = filter_input(INPUT_POST, 'new_data');
+    $data_type = filter_input(INPUT_POST, 'date_type');
+    $new_value = filter_input(INPUT_POST, 'new_value');
     $customer_id = filter_input(INPUT_POST, 'customer_id');
-    header("Location:index.php?action=view_customer&customer_id=".$customer_id);
+
+    $update_name = match ($data_type) {
+      'name' => $customer_db->update_name($customer_id, $new_value),
+      'address1' => $customer_db->update_address1($customer_id, $new_value),
+      'address2' => $customer_db->update_address2($customer_id, $new_value),
+      'address3' => $customer_db->update_address3($customer_id, $new_value),
+      'city' => $customer_db->update_city($customer_id, $new_value),
+      'state_id' => $customer_db->update_state_id($customer_id, $new_value),
+      'zip' => $customer_db->update_zip($customer_id, $new_value),
+      'phone' => $customer_db->update_phone($customer_id, $new_value),
+      'email' => $customer_db->update_email($customer_id, $new_value),
+    };
+
+    header("Location: index.php?action=view_customer&customer_id=".$customer_id);
 }
 
 
