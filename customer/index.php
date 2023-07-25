@@ -5,9 +5,10 @@ if (!isset($_SESSION["logged_in"])) {
 }
 require '../model/database.php';
 require '../model/customer_db.php';
+require '../model/log_statements_db.php';
 $user_id = $_SESSION['userId'];
 $customer_db = new CustomerDB;
-
+$log_statements_db = new LogStatementsDB;
 
 $action = filter_input(INPUT_POST, 'action');
     if ($action == null) {
@@ -23,6 +24,7 @@ if ($action == 'list_customers') {
 } else if ($action == 'view_customer') {
     $customer_id = filter_input(INPUT_GET, 'customer_id');
     $customer_info = $customer_db->get_customer_info($customer_id);
+    $statements = $log_statements_db->get_statements_limit3($customer_id);
     include 'view_customer.php';
 } else if ($action == 'edit_data') {
     $data_type = filter_input(INPUT_POST, 'date_type');
