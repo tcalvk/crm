@@ -115,7 +115,7 @@ if (!isset($_SESSION["logged_in"])) {
         setcookie($name, '', $expire, $path, $domain, $secure, $httponly);
         header("Location: login.php");
     } else {
-        header("Location: menu.php");
+        header("Location: homepage.php");
     }
 }
 ?>

@@ -12,5 +12,17 @@ class CustomerDB {
         $statement->closeCursor(); 
         return $customers;
     }
+    public function get_customer_info($customer_id) {
+        $db = Database::getDB();
+        $query = 'select *
+                 from Customer 
+                 where CustomerId = :CustomerId';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':CustomerId', $customer_id);
+        $statement->execute();
+        $customer_info = $statement->fetch();
+        $statement->closeCursor();
+        return $customer_info;
+    }
 }
 ?>

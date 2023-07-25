@@ -19,7 +19,7 @@ include '../view/header.php';
         <tbody>
             <?php foreach ($customers as $customer) : ?>
             <tr>
-                <td><?php echo $customer['Name']; ?></td>
+                <td><a href="index.php?action=view_customer&customer_id=<?php echo $customer['CustomerId']; ?>"><?php echo $customer['Name']; ?></a></td>
             </tr>
             <?php endforeach; ?>
         </tbody>
