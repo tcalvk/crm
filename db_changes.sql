@@ -150,4 +150,21 @@ insert into Contact (FirstName, LastName, Email, CustomerId) values ('Robert', '
 
 status = updated 
 
+8/25/23
 
+alter table LogStatements
+drop column PaidDate;
+
+alter table LogStatements
+add column PaidDate date after CreatedDate;
+
+update LogStatements
+set PaidDate = cast(CreatedDate as date);
+
+alter table LogStatements
+add column WrittenOff boolean;
+
+update LogStatements 
+set WrittenOff = 0;
+
+status = updated 

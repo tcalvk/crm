@@ -99,6 +99,8 @@ include '../view/header.php';
                             <th scope="col">Statement Number</th>
                             <th scope="col">Created Date</th>
                             <th scope="col">Total Amount</th>
+                            <th scope="col">Property Name</th>
+                            <th scope="col">Property Address 1</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -107,13 +109,15 @@ include '../view/header.php';
                             <td><a href="../log_statements/index.php?action=view_statement&statement_number=<?php echo $statement['StatementNumber']; ?>"><?php echo $statement['StatementNumber']; ?></a>
                             <td><?php echo $statement['CreatedDate']; ?> 
                             <td>$<?php echo $statement['TotalAmt']; ?>
+                            <td><?php echo $statement['PropertyName']; ?></td>
+                            <td><?php echo $statement['Address1']; ?></td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>
                 </table>
                 <br>
                 <div class="d-flex justify-content-center">
-                    <a href="">View All</a>
+                    <a href="../log_statements/index.php?action=view_all&customer_id=<?php echo $customer_id; ?>">View All</a>
                 </div>
             </div>
         </div>

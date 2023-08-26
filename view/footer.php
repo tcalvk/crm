@@ -1,5 +1,5 @@
 <footer>
-    <br>
+    <br><br><br><br><br><br><br>
     <p class="copyright">
         &copy; <?php echo date("Y"); ?> Corsaire Web, Inc. 
     </p>

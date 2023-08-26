@@ -58,12 +58,12 @@ class EmailServer {
         $mail->Host       = 'smtp.gmail.com';                    
         $mail->SMTPAuth   = true;                                  
         $mail->Username   = 'corsaire.tech@gmail.com';                    
-        $mail->Password   = 'jdvmznndcbujihhd';                              
+        $mail->Password   = 'twyhnxeibznbancc';                              
         $mail->SMTPSecure = 'tls';         
         $mail->Port       = 587;   
-        $mail->SMTPDebug = 1;
+        $mail->SMTPDebug = 0;
         $mail->setFrom('corsaire.tech@gmail.com', 'Corsaire Tech Account Services');
-
+ 
         //Recipients
         $mail->addAddress($email);    
     
