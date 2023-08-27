@@ -30,19 +30,35 @@ if ($action == 'list_customers') {
     $data_type = filter_input(INPUT_POST, 'date_type');
     $new_value = filter_input(INPUT_POST, 'new_value');
     $customer_id = filter_input(INPUT_POST, 'customer_id');
-
-    $update_name = match ($data_type) {
-      'name' => $customer_db->update_name($customer_id, $new_value),
-      'address1' => $customer_db->update_address1($customer_id, $new_value),
-      'address2' => $customer_db->update_address2($customer_id, $new_value),
-      'address3' => $customer_db->update_address3($customer_id, $new_value),
-      'city' => $customer_db->update_city($customer_id, $new_value),
-      'state_id' => $customer_db->update_state_id($customer_id, $new_value),
-      'zip' => $customer_db->update_zip($customer_id, $new_value),
-      'phone' => $customer_db->update_phone($customer_id, $new_value),
-      'email' => $customer_db->update_email($customer_id, $new_value),
-    };
-
+    switch ($data_type) {
+        case 'name':
+            $customer_db->update_name($customer_id, $new_value);
+            break;
+        case 'address1':
+            $customer_db->update_address1($customer_id, $new_value);
+            break;
+        case 'address2':
+            $customer_db->update_address2($customer_id, $new_value);
+            break;
+        case 'address3':
+            $customer_db->update_address3($customer_id, $new_value);
+            break;
+        case 'city':
+            $customer_db->update_city($customer_id, $new_value);
+            break;
+        case 'state_id':
+            $customer_db->update_state_id($customer_id, $new_value);
+            break;
+        case 'zip':
+            $customer_db->update_zip($customer_id, $new_value);
+            break;
+        case 'phone':
+            $customer_db->update_phone($customer_id, $new_value);
+            break;
+        case 'email':
+            $customer_db->update_email($customer_id, $new_value);
+            break;
+    }
     header("Location: index.php?action=view_customer&customer_id=".$customer_id);
 }
 
