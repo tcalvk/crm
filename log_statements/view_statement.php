@@ -35,7 +35,7 @@ include '../view/header.php';
                     <input type="hidden" name="statement_number" value="<?php echo $statement['StatementNumber']; ?>">
                     <input type="submit" value="Clear Paid Date" class="dropdown-item">
                 </form>
-                <button type="button" class="dropdown-item" data-toggle="modal" data-target="#writeoffModal">Write Off Statement</button>
+                <!-- <button type="button" class="dropdown-item" data-toggle="modal" data-target="#writeoffModal">Write Off Statement</button> -->
             </div>
         </li>
         </ul>

@@ -168,3 +168,11 @@ update LogStatements
 set WrittenOff = 0;
 
 status = updated 
+
+9/14/23
+
+alter table LogFixedPayments
+add column StatementNumber int after Id;
+
+alter table LogFixedPayments
+add foreign key (StatementNumber) references LogStatements(StatementNumber);
