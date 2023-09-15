@@ -24,20 +24,23 @@ include '../view/header.php';
 <main>
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #FFFFFF;">
     Statement <?php echo $statement['StatementNumber']; ?><br>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav ml-auto">
-        <li id="action_dropdown" class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <button type="button" class="dropdown-item" data-toggle="modal" data-target="#exampleModal">Mark as Paid</button>
-                <form action="index.php" method="post">
-                    <input type="hidden" name="action" value="clear_paid_date">
-                    <input type="hidden" name="statement_number" value="<?php echo $statement['StatementNumber']; ?>">
-                    <input type="submit" value="Clear Paid Date" class="dropdown-item">
-                </form>
-                <!-- <button type="button" class="dropdown-item" data-toggle="modal" data-target="#writeoffModal">Write Off Statement</button> -->
-            </div>
-        </li>
+            <li id="action_dropdown" class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <button type="button" class="dropdown-item" data-toggle="modal" data-target="#exampleModal">Mark as Paid</button>
+                    <form action="index.php" method="post">
+                        <input type="hidden" name="action" value="clear_paid_date">
+                        <input type="hidden" name="statement_number" value="<?php echo $statement['StatementNumber']; ?>">
+                        <input type="submit" value="Clear Paid Date" class="dropdown-item">
+                    </form>
+                    <!-- <button type="button" class="dropdown-item" data-toggle="modal" data-target="#writeoffModal">Write Off Statement</button> -->
+                </div>
+            </li>
         </ul>
     </div>
     </nav>
