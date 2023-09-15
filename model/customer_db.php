@@ -132,5 +132,15 @@ class CustomerDB {
         $statement->closeCursor();
         return true;
     }
+    public function get_customers_sudo () {
+        $db = Database::getDB();
+        $query = 'select c.*
+                 from Customer c';
+        $statement = $db->prepare($query);
+        $statement->execute();
+        $customers = $statement->fetchAll();
+        $statement->closeCursor();
+        return $customers;
+    }
 }
 ?>

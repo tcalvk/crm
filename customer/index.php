@@ -6,9 +6,13 @@ if (!isset($_SESSION["logged_in"])) {
 require '../model/database.php';
 require '../model/customer_db.php';
 require '../model/log_statements_db.php';
+require '../model/users_db.php';
 $user_id = $_SESSION['userId'];
 $customer_db = new CustomerDB;
 $log_statements_db = new LogStatementsDB;
+$users_db = new UsersDB;
+
+$user_info = $users_db->get_user_info($user_id);
 
 $action = filter_input(INPUT_POST, 'action');
     if ($action == null) {
@@ -19,7 +23,11 @@ $action = filter_input(INPUT_POST, 'action');
     }
 
 if ($action == 'list_customers') {
-    $customers = $customer_db->get_customers($user_id);
+    if ($user_info['superuser'] = 1) {
+        $customers = $customer_db->get_customers_sudo();
+    } else {
+        $customers = $customer_db->get_customers($user_id);
+    }
     include 'list_customers.php';
 } else if ($action == 'view_customer') {
     $customer_id = filter_input(INPUT_GET, 'customer_id');

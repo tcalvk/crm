@@ -53,7 +53,7 @@ class UsersDB {
         $statement->closeCursor();
         return true;
     }
-    public function get_personal_info($user_id) {
+    public function get_user_info($user_id) {
         $db = Database::getDB();
         $query = 'select * 
                  from users
