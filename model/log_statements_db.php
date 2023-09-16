@@ -131,6 +131,24 @@ class LogStatementsDB {
         $statement->closeCursor();
         return $row;
     }
+    public function generate_statement_number() {
+        $count = 1;
+        while ($count > 0) {
+            $invoice_number = mt_rand(100000, 999999);
+            $db = Database::getDB();
+            $query = 'select count(ls.StatementNumber) "RowCount"
+                    from LogStatements ls
+                    where ls.StatementNumber = :StatementNumber';
+            $statement = $db->prepare($query);
+            $statement->bindValue(':StatementNumber', $invoice_number);
+            $statement->execute();
+            $row_count = $statement->fetch();
+            $statement->closeCursor();
+
+            $count = $row_count['RowCount'];
+        }
+        return $invoice_number;
+    }
 }
 
 ?>

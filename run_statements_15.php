@@ -38,7 +38,7 @@ foreach ($contracts as $contract) :
     $options->setChroot(__DIR__);
     $pdf = new Dompdf($options);
 
-    $invoice_number = mt_rand(1000, 9999);
+    $invoice_number = $log_statements_db->generate_statement_number();
     $due_month = strtotime("+1 months", strtotime(date("y-m-d")));
     $due_month = date("Y/m", $due_month);
     $due_day = $contract['DueDate'];
