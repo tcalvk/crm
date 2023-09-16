@@ -47,13 +47,14 @@ class LogStatementsDB {
     public function get_statement($statement_number) {
         $db = Database::getDB();
         $query = 'select ls.StatementNumber, cast(ls.CreatedDate as date) "CreatedDate", cast(ls.PaidDate as date) "PaidDate", ls.TotalAmt, ls.PaymentNumber,
-        cu.Name "CustomerName", cu.CustomerId, ls.WrittenOff,
+        cu.Name "CustomerName", cu.CustomerId, ls.WrittenOff, ls.PaymentAmount
         case 
             when p.Name is not null then p.Name 
             else p.Address1
         end "Property",
         case
-            when ls.PaidDate is null then "Unpaid" 
+            when ls.PaidDate is null then "Unpaid"
+            when ls.PaymentAmount < ls.TotalAmt then "Partial Payment"
             else "Paid"
         end "Status"
         from LogStatements ls 

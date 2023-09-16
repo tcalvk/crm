@@ -176,3 +176,15 @@ add column StatementNumber int after Id;
 
 alter table LogFixedPayments
 add foreign key (StatementNumber) references LogStatements(StatementNumber);
+
+status = updated 
+
+9/15/23
+
+alter table LogStatements
+add column PaymentAmount decimal(13,2); 
+
+alter table LogStatements
+modify column TotalAmt decimal(13,2);
+
+status = updated 
