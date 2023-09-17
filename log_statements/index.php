@@ -35,8 +35,9 @@ if ($action == 'view_statement') {
 } else if ($action == 'mark_paid') {
     $statement_number = filter_input(INPUT_POST, 'statement_number');
     $paid_date = filter_input(INPUT_POST, 'paid_date');
+    $payment_amount = filter_input(INPUT_POST, 'payment_amount');
     $contract_info = $log_statements_db->get_contract_info($statement_number);
-    $success = $log_statements_db->mark_as_paid($statement_number, $paid_date);
+    $success = $log_statements_db->mark_as_paid($statement_number, $paid_date, $payment_amount);
     if ($contract_info['ContractType'] == 'Fixed') {
         //Assign variables for subtract_payment function
         $num_payments_due = $contract_info['NumPaymentsDue'];

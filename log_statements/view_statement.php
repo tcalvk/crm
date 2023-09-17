@@ -85,8 +85,16 @@ include '../view/header.php';
         </thead>
         <tbody>
             <tr>
-            <td><?php echo $statement['Status']; ?></td>
-            <td><?php echo $statement['PaidDate']; ?></td>
+                <td><?php echo $statement['Status']; ?></td>
+                <td><?php echo $statement['PaidDate']; ?></td>
+            </tr>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Payment Amount</th>
+            </tr>
+            <tr>
+                <td></td>
+                <td><?php echo $statement['PaymentAmount']; ?></td>
             </tr>
         </tbody>
     </table>
@@ -107,6 +115,11 @@ include '../view/header.php';
                         <div class="form-group">
                             <label for="paid_date" class="col-form-label">Date Paid:</label>
                             <input type="date" class="form-control" id="paid_date" name="paid_date">
+                        </div>
+                        <div class="form-group">
+                            <label for="payment_amount" class="col-form-label">Payment Amount</label>
+                            <span class="input-group-addon">$</span>
+                            <input type="number" value="<?php echo $statement['PaymentAmount']; ?>" min="0" step="0.01" name="payment_amount" id="payment_amount" class="form-control currency">
                         </div>
                 </div>
                     <div class="modal-footer">

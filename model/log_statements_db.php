@@ -47,7 +47,7 @@ class LogStatementsDB {
     public function get_statement($statement_number) {
         $db = Database::getDB();
         $query = 'select ls.StatementNumber, cast(ls.CreatedDate as date) "CreatedDate", cast(ls.PaidDate as date) "PaidDate", ls.TotalAmt, ls.PaymentNumber,
-        cu.Name "CustomerName", cu.CustomerId, ls.WrittenOff, ls.PaymentAmount
+        cu.Name "CustomerName", cu.CustomerId, ls.WrittenOff, ls.PaymentAmount,
         case 
             when p.Name is not null then p.Name 
             else p.Address1
@@ -85,14 +85,17 @@ class LogStatementsDB {
         $statement->closeCursor();
         return $statements;
     }
-    public function mark_as_paid($statement_number, $paid_date) {
+    public function mark_as_paid($statement_number, $paid_date, $payment_amount) {
         $db = Database::getDB();
         $query = 'update LogStatements
-                  set PaidDate = :PaidDate
+                  set 
+                  PaidDate = :PaidDate,
+                  PaymentAmount = :PaymentAmount
                   where StatementNumber = :StatementNumber';
         $statement = $db->prepare($query);
         $statement->bindValue(':PaidDate', $paid_date);
-        $statement->bindValue('StatementNumber', $statement_number);
+        $statement->bindValue(':StatementNumber', $statement_number);
+        $statement->bindValue(':PaymentAmount', $payment_amount);
         $statement->execute();
         $statement->closeCursor();
         return true;
@@ -100,7 +103,9 @@ class LogStatementsDB {
     public function clear_paid_date($statement_number) {
         $db = Database::getDB();
         $query = 'update LogStatements
-                 set PaidDate = null 
+                 set 
+                 PaidDate = null, 
+                 PaymentAmount = null
                  where StatementNumber = :StatementNumber';
         $statement = $db->prepare($query);
         $statement->bindValue(':StatementNumber', $statement_number);
