@@ -188,3 +188,10 @@ alter table LogStatements
 modify column TotalAmt decimal(13,2);
 
 status = updated 
+
+9/18/23
+
+alter table Contract
+add column Name varchar(256) after ContractId;
+
+status = updated 
