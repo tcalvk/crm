@@ -6,11 +6,12 @@ class ContractsDB {
                   cp.Address2 "CompanyAddress2", cp.Address3 "CompanyAddress3", cp.City "CompanyCity", cp.StateId
                   "CompanyState", cp.Zip "CompanyZip", ct.Name "BillingName", ct.Attention, ct.Address1 "BillingAddress1", 
                   ct.Address2 "BillingAddress2", ct.Address3 "BillingAddress3", ct.City "BillingCity", ct.StateId "BillingState", 
-                  ct.Zip "BillingZip", ct.Email "BillingEmail", c.BaseAmt + c.CAM "Total"
+                  ct.Zip "BillingZip", ct.Email "BillingEmail", c.BaseAmt + c.CAM "Total", u.email "ContractOwnerEmail"
                   from Contract c 
                   left join Property p on c.PropertyId = p.PropertyId
                   left join Company cp on p.OwnedBy = cp.CompanyId
                   left join Customer ct on c.CustomerId = ct.CustomerId
+                  left join users u on ct.userId = u.userId
                   where c.ContractType = "Evergreen"
                   and c.StatementSendDate = 15';
                   //and c.TestContract = 1
@@ -27,11 +28,12 @@ class ContractsDB {
                   "CompanyState", cp.Zip "CompanyZip", ct.Name "BillingName", ct.Attention, ct.Address1 "BillingAddress1", 
                   ct.Address2 "BillingAddress2", ct.Address3 "BillingAddress3", ct.City "BillingCity", ct.StateId "BillingState", 
                   ct.Zip "BillingZip", ct.Email "BillingEmail", c.BaseAmt + c.CAM "Total", p.Name "PropertyName", c.NumPaymentsDue, 
-                  c.TotalPaymentsDue
+                  c.TotalPaymentsDue, u.email "ContractOwnerEmail"
                   from Contract c 
                   left join Property p on c.PropertyId = p.PropertyId
                   left join Company cp on p.OwnedBy = cp.CompanyId
                   left join Customer ct on c.CustomerId = ct.CustomerId
+                  left join users u on ct.userId = u.userId
                   where c.ContractType = "Fixed"
                   and c.StatementSendDate = 1';
                   //and c.TestContract = 1
@@ -60,11 +62,12 @@ class ContractsDB {
                   "CompanyState", cp.Zip "CompanyZip", ct.Name "BillingName", ct.Attention, ct.Address1 "BillingAddress1", 
                   ct.Address2 "BillingAddress2", ct.Address3 "BillingAddress3", ct.City "BillingCity", ct.StateId "BillingState", 
                   ct.Zip "BillingZip", ct.Email "BillingEmail", c.BaseAmt + c.CAM "Total", p.Name "PropertyName", c.NumPaymentsDue, 
-                  c.TotalPaymentsDue
+                  c.TotalPaymentsDue, u.email "ContractOwnerEmail"
                   from Contract c 
                   left join Property p on c.PropertyId = p.PropertyId
                   left join Company cp on p.OwnedBy = cp.CompanyId
                   left join Customer ct on c.CustomerId = ct.CustomerId
+                  left join users u on ct.userId = u.userId
                   where c.TestContract = 1
                   and c.ContractType = "Evergreen"';
         $statement = $db->prepare($query);
@@ -80,11 +83,12 @@ class ContractsDB {
                   "CompanyState", cp.Zip "CompanyZip", ct.Name "BillingName", ct.Attention, ct.Address1 "BillingAddress1", 
                   ct.Address2 "BillingAddress2", ct.Address3 "BillingAddress3", ct.City "BillingCity", ct.StateId "BillingState", 
                   ct.Zip "BillingZip", ct.Email "BillingEmail", c.BaseAmt + c.CAM "Total", p.Name "PropertyName", c.NumPaymentsDue, 
-                  c.TotalPaymentsDue
+                  c.TotalPaymentsDue, u.email "ContractOwnerEmail"
                   from Contract c 
                   left join Property p on c.PropertyId = p.PropertyId
                   left join Company cp on p.OwnedBy = cp.CompanyId
                   left join Customer ct on c.CustomerId = ct.CustomerId
+                  left join users u on ct.userId = u.userId
                   where c.TestContract = 1
                   and c.ContractType = "Fixed"';
         $statement = $db->prepare($query);

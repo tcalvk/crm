@@ -106,7 +106,10 @@ foreach ($contracts as $contract) :
     $completed_date = date("Y-m-d");
     $log_statement = $log_statements_db->log_fixed_statement($invoice_number, $completed_date, $total, $payment_number, $contract_id);
     unset($email_recipients);
+    // Send a courtesy email notification
+    $contract_owner_email = $contract['ContractOwnerEmail'];
+    $email_notification = $email_server->statements_sent_notification($contract_owner_email);
+    unset($contract_owner_email);
 endforeach ; 
-
 ?>
 

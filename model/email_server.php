@@ -117,6 +117,37 @@ class EmailServer {
 
         return true;
     }
+    public function statements_sent_notification($contract_owner_email) {
+        $mail = new PHPMailer(true);
+        //Server settings
+        $mail->SMTPDebug = SMTP::DEBUG_SERVER;                 
+        $mail->isSMTP();                                   
+        $mail->Host       = 'smtp.gmail.com';                    
+        $mail->SMTPAuth   = true;                                    
+        $mail->Username   = 'corsaire.tech@gmail.com';                    
+        $mail->Password = 'twyhnxeibznbancc';                           
+        $mail->SMTPSecure = 'tls';         
+        $mail->Port       = 587;   
+        $mail->SMTPDebug = 1;
+        $mail->setFrom('corsaire.tech@gmail.com', 'Corsaire Tech Account Services');
+
+        //Recipient
+        $mail->addAddress($contract_owner_email);    
+        
+        //Content
+        $mail->isHTML(true);                             
+        $mail->Subject = 'Customer Statements Sent';
+        $body = 'This is a courtesy email from Corsaire Tech letting you know that statements were sent for your customer contracts. To view your unpaid statements, visit http://158.101.20.212/crm.
+        <br><br>';
+        $body .= "Best Regards, <br><br>";
+        $body .= "Corsaire Tech";
+        $mail->Body    = $body;
+        $mail->AltBody = 'Your statements were sent.';
+    
+        $mail->send();
+
+        return true;
+    }
 }
 
 ?>

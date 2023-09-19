@@ -98,7 +98,10 @@ foreach ($contracts as $contract) :
     $contract_id = $contract['ContractId'];
     $log_statement = $log_statements_db->log_evergreen_statement($invoice_number, $completed_date, $total, $contract_id);
     unset($email_recipients);
+    // Send a courtesy email notification
+    $contract_owner_email = $contract['ContractOwnerEmail'];
+    $email_notification = $email_server->statements_sent_notification($contract_owner_email);
+    unset($contract_owner_email);
 endforeach ; 
-
 ?>
 
