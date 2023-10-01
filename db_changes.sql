@@ -195,3 +195,41 @@ alter table Contract
 add column Name varchar(256) after ContractId;
 
 status = updated 
+
+9/26/23
+
+create table CustomStatement (
+    CustomStatementId int AUTO_INCREMENT,
+    CustomerId int,
+    Name varchar(256),
+    CreatedDate date,
+    Primary Key (CustomStatementId)
+)
+
+alter table CustomStatement
+add foreign key (CustomerId) references Customer(CustomerId)
+
+status = updated 
+
+create table CustomStatementLine (
+    CustomStatementLineId int AUTO_INCREMENT,
+    CustomStatementId int,
+    Description varchar(256),
+    Qty decimal (19,2),
+    UnitPrice decimal(19,2),
+    UnitDiscount decimal (19,2),
+    Primary Key (CustomStatementLineId)
+)
+
+alter table CustomStatementLine
+add foreign key (CustomStatementId) references CustomStatement(CustomStatementId)
+
+status = updated 
+
+alter table LogStatements 
+add column CustomStatementId int;
+
+alter table LogStatements
+add foreign key (CustomStatementId) references CustomStatement(CustomStatementId);
+
+status = updated 

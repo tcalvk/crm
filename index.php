@@ -80,7 +80,7 @@ if (!isset($_SESSION["logged_in"])) {
         $entered_code = filter_input(INPUT_POST, 'entered_code'); 
         if ($code == $entered_code) {
             $_SESSION["can_change_password"] = true;
-            include 'new_password.php';
+            header("Location: new_password.php");
         } else {
             header("Location: enter_code.php?message=Code Incorrect");
         }

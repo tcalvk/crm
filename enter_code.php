@@ -22,8 +22,8 @@ $message = filter_input(INPUT_GET, 'message');
                 <input type="hidden" name="action" value="submit_code">
                 <div class="form-row">
                     <div class="form-group col">
-                        <label for="entered-code">Code:</label>
-                        <input class="form-control" type="text" class="text" name="entered_code" id="entered-code">
+                        <label for="entered_code">Code:</label>
+                        <input class="form-control" type="text" class="text" name="entered_code" id="entered_code">
                     </div>
                 </div>            
                 <input class="btn btn-primary" type="submit" value="Submit">&nbsp; &nbsp;
