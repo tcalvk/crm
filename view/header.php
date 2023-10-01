@@ -27,7 +27,7 @@
                         <a class="nav-link" href="/customer/index.php?action=list_customers">Customers</a>
                     </li>
                     <li class="nav-link disabled">
-                        <form action="index.php" method="post">
+                        <form action="/index.php" method="post">
                             <input type="hidden" name="action" value="logout">
                             <input type="submit" value="Logout">
                         </form>
