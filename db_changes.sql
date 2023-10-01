@@ -233,3 +233,25 @@ alter table LogStatements
 add foreign key (CustomStatementId) references CustomStatement(CustomStatementId);
 
 status = updated 
+
+9/30/23
+
+alter table LogStatements 
+add column DueDate date 
+
+status = updated 
+
+10/1/23
+
+create table UserSettings (
+    Id int,
+    userId int,
+    StatementOverdueNotification bit,
+    StatementOverdueNotificationDays int,
+    primary key (Id)
+)
+
+alter table UserSettings
+add foreign key (userId) references users(userId)
+
+status = updated

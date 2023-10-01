@@ -71,6 +71,16 @@ include '../view/header.php';
             <td>$<?php echo $statement['TotalAmt']; ?></td>
             </tr>
         </tbody>
+        <thead>
+            <tr>
+                <th scope="col">Due Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><?php echo $statement['DueDate']; ?></td>
+            </tr>
+        </tbody>
     </table>
 
     <br><br>

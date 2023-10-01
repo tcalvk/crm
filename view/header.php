@@ -26,6 +26,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/customer/index.php?action=list_customers">Customers</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user_settings/index.php?action=view_user_settings">Settings</a>
+                    </li>
                     <li class="nav-link disabled">
                         <form action="index.php" method="post">
                             <input type="hidden" name="action" value="logout">
