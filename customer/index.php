@@ -23,7 +23,7 @@ $action = filter_input(INPUT_POST, 'action');
     }
 
 if ($action == 'list_customers') {
-    if ($user_info['superuser'] = 1) {
+    if ($user_info['superuser'] == 1) {
         $customers = $customer_db->get_customers_sudo();
     } else {
         $customers = $customer_db->get_customers($user_id);
