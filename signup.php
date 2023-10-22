@@ -49,6 +49,10 @@ $message = filter_input(INPUT_GET, 'message');
                         You must enter a password. 
                     </div>
                 </div>
+                <div class="form-group">
+                    <input type="checkbox" name="show_password" onclick="show_hide()">
+                    <label for="show_password">Show Password</label>
+                </div>
                 <input class="btn btn-primary" type="submit" value="Sign Up">&nbsp;
                 <a href="login.php">Login Instead</a>
             </form>
@@ -76,6 +80,18 @@ $message = filter_input(INPUT_GET, 'message');
                     });
                 }, false);
                 })();
+
+
+                function show_hide() {
+                    var x = document.getElementById("password");
+                    if (x.type === "password") {
+                        x.type = "text";
+                    } else {
+                        x.type = "password";
+                    }
+                }
             </script>
+
+            
         </div>
     </body>
