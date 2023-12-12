@@ -1,28 +1,30 @@
 <?php 
 class LogStatementsDB {
-    public function log_fixed_statement($invoice_number, $completed_date, $total, $payment_number, $contract_id) {
+    public function log_fixed_statement($invoice_number, $completed_date, $total, $payment_number, $contract_id, $due_date) {
         $db = Database::getDB();
-        $query = 'insert into LogStatements (StatementNumber, CreatedDate, TotalAmt, PaymentNumber, ContractId)
-                 values (:StatementNumber, :CreatedDate, :TotalAmt, :PaymentNumber, :ContractId)';
+        $query = 'insert into LogStatements (StatementNumber, CreatedDate, TotalAmt, PaymentNumber, ContractId, DueDate)
+                 values (:StatementNumber, :CreatedDate, :TotalAmt, :PaymentNumber, :ContractId, :DueDate)';
         $statement = $db->prepare($query);
         $statement->bindValue(':StatementNumber', $invoice_number);
         $statement->bindValue(':CreatedDate', $completed_date);
         $statement->bindValue(':TotalAmt', $total);
         $statement->bindValue(':PaymentNumber', $payment_number);
         $statement->bindValue(':ContractId', $contract_id);
+        $statement->bindValue(':DueDate', $due_date);
         $statement->execute();
         $statement->closeCursor();
         return true;
     }
-    public function log_evergreen_statement($invoice_number, $completed_date, $total, $contract_id) {
+    public function log_evergreen_statement($invoice_number, $completed_date, $total, $contract_id, $due_date) {
         $db = Database::getDB();
-        $query = 'insert into LogStatements (StatementNumber, CreatedDate, TotalAmt, ContractId)
-                 values (:StatementNumber, :CreatedDate, :TotalAmt, :ContractId)';
+        $query = 'insert into LogStatements (StatementNumber, CreatedDate, TotalAmt, ContractId, DueDate)
+                 values (:StatementNumber, :CreatedDate, :TotalAmt, :ContractId, :DueDate)';
         $statement = $db->prepare($query);
         $statement->bindValue(':StatementNumber', $invoice_number);
         $statement->bindValue(':CreatedDate', $completed_date);
         $statement->bindValue(':TotalAmt', $total);
         $statement->bindValue(':ContractId', $contract_id);
+        $statement->bindValue(':DueDate', $due_date);
         $statement->execute();
         $statement->closeCursor();
         return true;
@@ -154,6 +156,25 @@ class LogStatementsDB {
             $count = $row_count['RowCount'];
         }
         return $invoice_number;
+    }
+    public function get_overdue_statements() {
+        $db = Database::getDB();
+        $query = 'select ls.StatementNumber, u.firstname "UserFirstName", cu.Name "CustomerName", c.Name "ContractName", ls.DueDate, ls.CreatedDate, u.email
+        from LogStatements ls 
+        left join Contract c on ls.ContractId = c.ContractId 
+        left join Customer cu on c.CustomerId = cu.CustomerId 
+        left join users u on cu.userId = u.userId
+        left join UserSettings us on u.userId = us.userId
+        where us.StatementOverdueNotification = "true" 
+        and curdate() > date_add(ls.DueDate, interval us.StatementOverdueNotificationDays day)
+        and ls.PaidDate is null
+        and c.TestContract = 1';
+        //and (c.TestContract is null or c.TestContract = 0)';
+        $statement = $db->prepare($query);
+        $statement->execute();
+        $overdue_statements = $statement->fetchAll();
+        $statement->closeCursor();
+        return $overdue_statements;
     }
 }
 
