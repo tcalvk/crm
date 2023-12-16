@@ -13,8 +13,8 @@ class ContractsDB {
                   left join Customer ct on c.CustomerId = ct.CustomerId
                   left join users u on ct.userId = u.userId
                   where c.ContractType = "Evergreen"
-                  and c.StatementSendDate = 15';
-                  //and c.TestContract = 1
+                  and c.StatementSendDate = 15
+                  and (c.TestContract is null or c.TestContract = 0)';
         $statement = $db->prepare($query);
         $statement->execute();
         $contracts = $statement->fetchAll();
@@ -35,8 +35,8 @@ class ContractsDB {
                   left join Customer ct on c.CustomerId = ct.CustomerId
                   left join users u on ct.userId = u.userId
                   where c.ContractType = "Fixed"
-                  and c.StatementSendDate = 1';
-                  //and c.TestContract = 1
+                  and c.StatementSendDate = 1
+                  and (c.TestContract is null or c.TestContract = 0)';
         $statement = $db->prepare($query);
         $statement->execute();
         $contracts = $statement->fetchAll();
