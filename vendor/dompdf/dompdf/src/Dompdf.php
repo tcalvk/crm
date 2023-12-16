@@ -164,7 +164,7 @@ class Dompdf
      *
      * @var string
      */
-    private $mbstringEncoding = null;
+    private $mbstringEncoding = 'UTF-8';
 
     /**
      * The system's PCRE JIT configuration
