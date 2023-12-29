@@ -137,12 +137,49 @@ class EmailServer {
         //Content
         $mail->isHTML(true);                             
         $mail->Subject = 'Customer Statements Sent';
-        $body = 'This is a courtesy email from Corsaire Tech letting you know that statements were sent for your customer contracts. To view your unpaid statements, visit http://158.101.20.212/crm.
+        $body = 'This is a courtesy email from Corsaire Tech letting you know that statements were sent for your customer contracts. To view your unpaid statements, visit www.corsairetech.com.
         <br><br>';
         $body .= "Best Regards, <br><br>";
         $body .= "Corsaire Tech";
         $mail->Body    = $body;
         $mail->AltBody = 'Your statements were sent.';
+    
+        $mail->send();
+
+        return true;
+    }
+    public function statement_overdue_notification($user_email, $statement_number, $customer_name, $contract_name, $created_date, $due_date) {
+        $mail = new PHPMailer(true);
+        //Server settings
+        $mail->SMTPDebug = SMTP::DEBUG_SERVER;                 
+        $mail->isSMTP();                                   
+        $mail->Host       = 'smtp.gmail.com';                    
+        $mail->SMTPAuth   = true;                                    
+        $mail->Username   = 'corsaire.tech@gmail.com';                    
+        $mail->Password = 'twyhnxeibznbancc';                           
+        $mail->SMTPSecure = 'tls';         
+        $mail->Port       = 587;   
+        $mail->SMTPDebug = 1;
+        $mail->setFrom('corsaire.tech@gmail.com', 'Corsaire Tech Account Services');
+
+        //Recipient
+        $mail->addAddress($user_email);    
+        
+        //Content
+        $mail->isHTML(true);                             
+        $mail->Subject = 'Statement Overdue Notification';
+        $body = 'This is a courtesy email from Corsaire Tech letting you know that you have an overdue statement that may need to be addressed. See the details below: 
+        <br><br>';
+        $body .= 'Statement Number: '. $statement_number . '<br>';
+        $body .= 'Customer Name: '. $customer_name . '<br>';
+        $body .= 'Contract Name: '. $contract_name . '<br>';
+        $body .= 'Statement Sent: '. $created_date . '<br>';
+        $body .= 'Statement Due Date: '. $due_date . '<br><br>';
+        $body .= 'You can view your overdue statements at http://corsairetech.com <br><br>';
+        $body .= "Best Regards, <br><br>";
+        $body .= "Corsaire Tech";
+        $mail->Body    = $body;
+        $mail->AltBody = 'You have overdue statements.';
     
         $mail->send();
 
