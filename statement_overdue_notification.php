@@ -19,6 +19,7 @@ foreach ($overdue_statements as $overdue_statement) :
 
     $send_notification = $email_server->statement_overdue_notification($user_email, $statement_number, $customer_name, $contract_name, $created_date, $due_date);
 
+    unset($user_email);
 endforeach;
 
 ?>

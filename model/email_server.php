@@ -175,7 +175,7 @@ class EmailServer {
         $body .= 'Contract Name: '. $contract_name . '<br>';
         $body .= 'Statement Sent: '. $created_date . '<br>';
         $body .= 'Statement Due Date: '. $due_date . '<br><br>';
-        $body .= 'You can view your overdue statements at www.corsairetech.com <br><br>';
+        $body .= 'You can view your overdue statements at http://corsairetech.com <br><br>';
         $body .= "Best Regards, <br><br>";
         $body .= "Corsaire Tech";
         $mail->Body    = $body;

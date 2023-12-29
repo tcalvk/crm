@@ -168,13 +168,13 @@ class LogStatementsDB {
         where us.StatementOverdueNotification = "true" 
         and curdate() > date_add(ls.DueDate, interval us.StatementOverdueNotificationDays day)
         and ls.PaidDate is null
-        and c.TestContract = 1';
-        //and (c.TestContract is null or c.TestContract = 0)';
+        and (c.TestContract is null or c.TestContract = 0)';
+        //and c.TestContract = 1';
         $statement = $db->prepare($query);
         $statement->execute();
         $overdue_statements = $statement->fetchAll();
         $statement->closeCursor();
-        return $overdue_statements;
+        return $overdue_statements; 
     }
 }
 
