@@ -97,6 +97,17 @@ class ContractsDB {
         $statement->closeCursor(); 
         return $contracts;
     }
+    public function get_contract_info($contract_id) {
+        $db = Database::getDB();
+        $query = 'select c.*
+                 from Contract c 
+                 where c.ContractId = :ContractId';
+        $statement = $db->prepare($query);
+        $statement->execute();
+        $contract_info = $statement->fetch();
+        $statement->closeCursor();
+        return $contract_info;
+    }
 }
 
 ?>
