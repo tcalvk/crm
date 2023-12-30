@@ -21,14 +21,20 @@ if ($action == null) {
 }
 
 if ($action == 'view_contract') {
-    $contract_id = filter_input(INPUT_GET, 'contract_id');     
+    $contract_id = filter_input(INPUT_GET, 'contract_id');   
+    $contract_info = $contracts_db->get_contract_info($contract_id);  
     //If user is a superuser, bypass all security and display the record
     if ($user_info['superuser'] == 1) {
         include 'view_contract.php';
+    //If user owns the record, display the record
+    } else if ($user_id == $contract_info['userId']) {
+        include 'view_contract.php';
     } else {
-        //If user owns the record, display the record
-        $contract_info = $contracts_db->get_contract_info($contract_id);
+        header('Location: view/record_access_error.php');
     }
+} else if ($action == 'view_contracts_list') {
+    $customer_id = filter_input(INPUT_GET, 'customer_id');
+    include 'view_contracts_list.php';
 }
 
 ?>
