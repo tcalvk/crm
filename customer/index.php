@@ -7,10 +7,12 @@ require '../model/database.php';
 require '../model/customer_db.php';
 require '../model/log_statements_db.php';
 require '../model/users_db.php';
+require '../model/contracts_db.php';
 $user_id = $_SESSION['userId'];
 $customer_db = new CustomerDB;
 $log_statements_db = new LogStatementsDB;
 $users_db = new UsersDB;
+$contracts_db = new ContractsDB;
 
 $user_info = $users_db->get_user_info($user_id);
 
@@ -33,6 +35,7 @@ if ($action == 'list_customers') {
     $customer_id = filter_input(INPUT_GET, 'customer_id');
     $customer_info = $customer_db->get_customer_info($customer_id);
     $statements = $log_statements_db->get_statements_limit3($customer_id);
+    $contracts = $contracts_db->get_contracts_limit3($customer_id);
     include 'view_customer.php';
 } else if ($action == 'edit_data') {
     $data_type = filter_input(INPUT_POST, 'date_type');
