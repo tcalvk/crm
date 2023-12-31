@@ -12,14 +12,14 @@ include '../view/header.php';
         <thead>
             <tr>
                 <th scope="col">Contract Name</th>
-                <th scope="col">Created Date</th>
+                <th scope="col">Contract Type</th>
             </tr>
         </thead>
         <tbody>
-        <?php foreach ($statements as $statement) : ?>
+        <?php foreach ($contracts as $contract) : ?>
             <tr>
-                <td><a href="../log_statements/index.php?action=view_statement&statement_number=<?php echo $statement['StatementNumber']; ?>"><?php echo $statement['StatementNumber']; ?></a>
-                <td><?php echo $statement['CreatedDate']; ?> 
+                <td><a href=".?action=view_contract&contract_id=<?php echo $contract['ContractId']; ?>"><?php echo $contract['Name']; ?></a></td>
+                <td><?php echo $contract['ContractType']; ?></td>
             </tr>
         <?php endforeach; ?>
         </tbody>

@@ -95,6 +95,10 @@ include '../view/header.php';
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+                    <br>
+                    <div class="d-flex justify-content-center">
+                    <a href="../contract/index.php?action=view_contracts_list&customer_id=<?php echo $customer_id; ?>">View All</a>
+                </div>
                 </div>
             </div>
         </div>

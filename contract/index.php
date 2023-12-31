@@ -7,9 +7,10 @@ $user_id = $_SESSION['userId'];
 require '../model/database.php';
 require '../model/users_db.php';
 require '../model/contracts_db.php';
+require '../model/customer_db.php';
 $contracts_db = new ContractsDB;
 $users_db = new UsersDB;
-
+$customer_db = new CustomerDB;
 
 $user_info = $users_db->get_user_info($user_id);
 $action = filter_input(INPUT_POST, 'action');
@@ -34,7 +35,16 @@ if ($action == 'view_contract') {
     }
 } else if ($action == 'view_contracts_list') {
     $customer_id = filter_input(INPUT_GET, 'customer_id');
-    include 'view_contracts_list.php';
+    $customer_info = $customer_db->get_customer_info($customer_id);
+    $contracts = $contracts_db->get_contracts($customer_id);
+    if ($user_info['superuser'] == 1) {
+        include 'view_contracts_list.php';
+    //If user owns the record, display the record
+    } else if ($user_id == $customer_info['userId']) {
+        include 'view_contracts_list.php';
+    } else {
+        header('Location: view/record_access_error.php');
+    }
 }
 
 ?>
