@@ -91,7 +91,7 @@ include '../view/header.php';
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">Number of Payments Due</th>
+                <th scope="col">Outstanding Payments Due</th>
                 <th scope="col">Total Payments Due</th>
             </tr>
         </thead>
