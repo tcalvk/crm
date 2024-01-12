@@ -31,7 +31,7 @@ include '../view/header.php';
         <tbody>
             <tr>
                 <td><?php echo $user_info['firstname']; ?></td>
-                <td><?php echo $user_info['lastname']; ?></td>
+                <td><?php echo $user_info['lastname']; ?></td> 
             </tr>
         </tbody>
     </table>

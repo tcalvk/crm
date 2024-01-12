@@ -255,3 +255,12 @@ alter table UserSettings
 add foreign key (userId) references users(userId)
 
 status = updated
+
+1/11/2024
+alter table LogStatements 
+add column OverdueStatementNotificationSent tinyint;
+
+update LogStatements 
+set OverdueStatementNotificationSent = 0;
+
+status = updated 

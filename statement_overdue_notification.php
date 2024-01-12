@@ -19,6 +19,8 @@ foreach ($overdue_statements as $overdue_statement) :
 
     $send_notification = $email_server->statement_overdue_notification($user_email, $statement_number, $customer_name, $contract_name, $created_date, $due_date);
 
+    $update_statement = $log_statements_db->update_overdue_statements($statement_number);
+    
     unset($user_email);
 endforeach;
 

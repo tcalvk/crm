@@ -168,13 +168,25 @@ class LogStatementsDB {
         where us.StatementOverdueNotification = "true" 
         and curdate() > date_add(ls.DueDate, interval us.StatementOverdueNotificationDays day)
         and ls.PaidDate is null
-        and (c.TestContract is null or c.TestContract = 0)';
+        and (c.TestContract is null or c.TestContract = 0)
+        and ls.OverdueStatementNotificationSent = 0';
         //and c.TestContract = 1';
         $statement = $db->prepare($query);
         $statement->execute();
         $overdue_statements = $statement->fetchAll();
         $statement->closeCursor();
         return $overdue_statements; 
+    }
+    public function update_overdue_statements($statement_number) {
+        $db = Database::getDB();
+        $query = 'update LogStatements
+                 set OverdueStatementNotificationSent = 1
+                 where StatementNumber = :StatementNumber';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':StatementNumber', $statement_number);
+        $statement->execute();
+        $statement->closeCursor();
+        return true;
     }
 }
 
