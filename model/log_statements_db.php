@@ -177,6 +177,25 @@ class LogStatementsDB {
         $statement->closeCursor();
         return $overdue_statements; 
     }
+    public function get_overdue_statements_test() {
+        $db = Database::getDB();
+        $query = 'select ls.StatementNumber, u.firstname "UserFirstName", cu.Name "CustomerName", c.Name "ContractName", ls.DueDate, ls.CreatedDate, u.email
+        from LogStatements ls 
+        left join Contract c on ls.ContractId = c.ContractId 
+        left join Customer cu on c.CustomerId = cu.CustomerId 
+        left join users u on cu.userId = u.userId
+        left join UserSettings us on u.userId = us.userId
+        where us.StatementOverdueNotification = "true" 
+        and curdate() > date_add(ls.DueDate, interval us.StatementOverdueNotificationDays day)
+        and ls.PaidDate is null
+        and c.TestContract = 1
+        and ls.OverdueStatementNotificationSent = 0';
+        $statement = $db->prepare($query);
+        $statement->execute();
+        $overdue_statements = $statement->fetchAll();
+        $statement->closeCursor();
+        return $overdue_statements; 
+    }
     public function update_overdue_statements($statement_number) {
         $db = Database::getDB();
         $query = 'update LogStatements
