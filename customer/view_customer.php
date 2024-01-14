@@ -7,6 +7,27 @@ if (!isset($_SESSION["logged_in"])) {
 include '../view/header.php';
 ?>
 
+<script>
+
+function update_customer() {
+    var new_name = 'Mr. Singh';
+    var xml = new XMLHttpRequest();
+    xml.open("POST", "index.php", true);
+
+    xml.onreadystatechange = function() {
+        if(this.readyState === 4 && this.status === 200) {
+            document.getElementById("name").innerHTML = 'Mr Singh'
+        }
+    };
+    xml.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xml.send("action=edit_data&data_type=name&customer_id=4&new_value=" + new_name);
+}
+
+function test_function() {
+    alert("Test functino");
+}
+</script>
+
 <main>
     <br>
     <h3><?php echo $customer_info['Name']; ?></h3>
@@ -41,7 +62,7 @@ include '../view/header.php';
     <table class="table table-hover">
         <thead>
             <tr>
-                <th scope="col">Customer Name</th>
+                <th scope="col">Customer Name</th> 
                 <th scope="col">Address 1</th>
                 <th scope="col">Address 2</th>
                 <th scope="col">Address 3</th>
@@ -54,7 +75,7 @@ include '../view/header.php';
         </thead>
         <tbody>
             <tr>
-                <td><?php echo $customer_info['Name']; ?>
+                <td id="name"><?php echo $customer_info['Name']; ?> &nbsp; <small><button onclick="update_customer()">Edit</button></small>
                 <td><?php echo $customer_info['Address1']; ?> 
                 <td><?php echo $customer_info['Address2']; ?>
                 <td><?php echo $customer_info['Address3']; ?>
