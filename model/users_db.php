@@ -142,6 +142,30 @@ class UsersDB {
             return $row;
         }
     }
+    public function update_firstname ($new_firstname, $user_id) {
+        $db = Database::getDB();
+        $query = 'update users
+                 set firstname = :new_firstname
+                 where userId = :userId';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':new_firstname', $new_firstname);
+        $statement->bindValue(':userId', $user_id);
+        $statement->execute();
+        $statement->closeCursor();
+        return true;
+    }
+    public function update_lastname ($new_lastname, $user_id) {
+        $db = Database::getDB();
+        $query = 'update users
+                 set lastname = :new_lastname
+                 where userId = :userId';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':userId', $user_id);
+        $statement->bindValue(':new_lastname', $new_lastname);
+        $statement->execute();
+        $statement->closeCursor();
+        return true;
+    }
 }
 
 ?>

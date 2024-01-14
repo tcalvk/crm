@@ -97,6 +97,46 @@ class ContractsDB {
         $statement->closeCursor(); 
         return $contracts;
     }
+    public function get_contract_info($contract_id) {
+        $db = Database::getDB();
+        $query = 'select c.*, cu.userId, cu.Name "CustomerName", p.Name "PropertyName", co.Name "CompanyName"
+                 from Contract c 
+                 left join Customer cu on c.CustomerId = cu.CustomerId 
+                 left join Property p on c.PropertyId = p.PropertyId 
+                 left join Company co on c.CompanyId = co.CompanyId
+                 where c.ContractId = :ContractId';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':ContractId', $contract_id);
+        $statement->execute();
+        $contract_info = $statement->fetch();
+        $statement->closeCursor();
+        return $contract_info;
+    }
+    public function get_contracts_limit3($customer_id) {
+        $db = Database::getDB();
+        $query = 'select c.*
+                 from Contract c 
+                 where c.CustomerId = :CustomerId
+                 limit 3';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':CustomerId', $customer_id);
+        $statement->execute();
+        $contracts = $statement->fetchAll();
+        $statement->closeCursor();
+        return $contracts;
+    }
+    public function get_contracts($customer_id) {
+        $db = Database::getDB();
+        $query = 'select c.*
+                 from Contract c 
+                 where c.CustomerId = :CustomerId';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':CustomerId', $customer_id);
+        $statement->execute();
+        $contracts = $statement->fetchAll();
+        $statement->closeCursor();
+        return $contracts;
+    }
 }
 
 ?>
