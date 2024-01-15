@@ -26,12 +26,16 @@ include '../view/header.php';
             <tr>
                 <th scope="col">First Name &nbsp; <small><a href="" data-toggle="modal" data-target="#edit_firstname_modal">Edit</a></small></th>
                 <th scope="col">Last Name &nbsp; <small><a href="" data-toggle="modal" data-target="#edit_lastname_modal">Edit</a></small></th>
+                <th scope="col">Email &nbsp; <small><a href="" data-toggle="modal" data-target="#change_email_modal">Edit</a></small></th>
+                <th scope="col">Password &nbsp; <small><a href="" data-toggle="modal" data-target="#change_password_modal">Edit</a></small></th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td><?php echo $user_info['firstname']; ?></td>
                 <td><?php echo $user_info['lastname']; ?></td>
+                <td><?php echo $user_info['email']; ?></td>
+                <td><?php echo "********"; ?></td>
             </tr>
         </tbody>
     </table>
@@ -108,6 +112,58 @@ include '../view/header.php';
                         <div class="form-group">
                             <label for="new_lastname" class="col-form-label">New Last Name:</label>
                             <input type="text" name="new_lastname" id="new_lastname">
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Save">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="change_email_modal" tabindex="-1" role="dialog" aria-labelledby="change_email_modal_label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="change_email_modal_label">Edit Email</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="index.php" method="post">
+                        <input type="hidden" name="action" value="edit_email">
+                        <div class="form-group">
+                            <label for="new_email" class="col-form-label">New Email:</label>
+                            <input type="text" name="new_email" id="new_email">
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Save">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="change_password_modal" tabindex="-1" role="dialog" aria-labelledby="change_password_modal_label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="change_password_modal_label">Edit Password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="index.php" method="post">
+                        <input type="hidden" name="action" value="edit_password">
+                        <div class="form-group">
+                            <label for="new_password" class="col-form-label">New Password:</label>
+                            <input type="text" name="new_password" id="new_password">
                         </div>
                 </div>
                 <div class="modal-footer">
