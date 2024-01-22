@@ -36,7 +36,6 @@ include '../view/header.php';
                 <td><?php echo $user_info['lastname']; ?></td>
                 <td><?php echo $user_info['email']; ?></td>
                 <td><?php echo "********"; ?></td>
-                <td><?php echo $user_info['lastname']; ?></td> 
             </tr>
         </tbody>
     </table>
@@ -164,7 +163,11 @@ include '../view/header.php';
                         <input type="hidden" name="action" value="edit_password">
                         <div class="form-group">
                             <label for="new_password" class="col-form-label">New Password:</label>
-                            <input type="text" name="new_password" id="new_password">
+                            <input type="password" name="new_password" id="new_password">
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" name="show_password" onclick="show_hide()">
+                            <label for="show_password">Show Password</label>
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -174,6 +177,18 @@ include '../view/header.php';
                 </div>
             </div>
         </div>
+
+        <script>
+            function show_hide() {
+            var x = document.getElementById("new_password");
+            if (x.type === "new_password") {
+                x.type = "text";
+            } else {
+                x.type = "new_password";
+            }
+            }
+        </script>
+
     </div>
 
     <div class="modal fade" id="edit_statement_overdue_notification_modal" tabindex="-1" role="dialog" aria-labelledby="edit_statement_overdue_notification_modal_label" aria-hidden="true">
