@@ -301,7 +301,7 @@ CREATE TABLE `ContractTerm` (
   `ContractId` int(11) DEFAULT NULL,
   `TermStartDate` date DEFAULT NULL,
   `TermEndDate` date DEFAULT NULL,
-  `BaseAmt` decimal(10,0) DEFAULT NULL
+  `BaseAmt` decimal(19,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -348,4 +348,4 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
-status = 'not updated'
+status = 'updated'
