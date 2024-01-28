@@ -32,9 +32,13 @@ if ($action == 'view_user_settings') {
     $execute = $users_db->update_lastname($new_lastname, $user_id);
     header('Location: .?action=view_user_settings');
 } else if ($action == 'change_email') {
-    $new_email = filter_input(INPUT_POST,'new_email');
-    $execute = $users_db->change_email($new_email, $user_id);
-    header('Location: .?action=view_user_settings');
+    if (check_email == 'true') {
+        $new_email = filter_input(INPUT_POST,'new_email');
+        $execute = $users_db->change_email($new_email, $user_id);
+        header('Location: .?action=view_user_settings');
+    } else {
+        header('Location: .?action=view_user_settings?message={The input email has already been taken. Please try again.}');
+    }
 } else if ($action == 'change_password') {
     $new_password = filter_input(INPUT_POST,'new_password');
     $execute = $users_db->change_password($new_password, $user_id);

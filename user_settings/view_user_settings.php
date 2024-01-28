@@ -5,6 +5,8 @@ if (!isset($_SESSION["logged_in"])) {
 }
 
 include '../view/header.php';
+
+$message = filter_input(INPUT_GET, 'message');
 ?>
 <body onload="statement_overdue_checkbox()">
 <script>
@@ -16,9 +18,21 @@ include '../view/header.php';
             document.getElementById("statement_overdue_notification").checked = true;
         }
     }
+
+    function show_hide() {
+    var x = document.getElementById("new_password");
+        if (x.type === "new_password") {
+            x.type = "text";
+        } else {
+            x.type = "new_password";
+        }
+        }
 </script>
 
 <main>
+    <div>
+        <p class="text-danger"><?php echo $message; ?></p>
+    </div>
     <br><br>
     <h5>User Information</h5>
     <table class="table">
@@ -177,18 +191,6 @@ include '../view/header.php';
                 </div>
             </div>
         </div>
-
-        <script>
-            function show_hide() {
-            var x = document.getElementById("new_password");
-            if (x.type === "new_password") {
-                x.type = "text";
-            } else {
-                x.type = "new_password";
-            }
-            }
-        </script>
-
     </div>
 
     <div class="modal fade" id="edit_statement_overdue_notification_modal" tabindex="-1" role="dialog" aria-labelledby="edit_statement_overdue_notification_modal_label" aria-hidden="true">
