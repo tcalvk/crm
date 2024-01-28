@@ -21,10 +21,10 @@ $message = filter_input(INPUT_GET, 'message');
 
     function show_hide() {
     var x = document.getElementById("new_password");
-        if (x.type === "new_password") {
+        if (x.type === "password") {
             x.type = "text";
         } else {
-            x.type = "new_password";
+            x.type = "password";
         }
         }
 </script>
