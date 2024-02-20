@@ -58,7 +58,7 @@ class EmailServer {
         $mail->Host       = 'smtp.gmail.com';                    
         $mail->SMTPAuth   = true;                                  
         $mail->Username   = 'corsaire.tech@gmail.com';                    
-        $mail->Password   = 'twyhnxeibznbancc';                              
+        $mail->Password   = 'gkdaufpbyvjggvkq';                              
         $mail->SMTPSecure = 'tls';         
         $mail->Port       = 587;   
         $mail->SMTPDebug = 0;
