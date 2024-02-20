@@ -32,6 +32,10 @@ if (!isset($_SESSION["can_change_password"])) {
                             <input class="form-control" id="new_password" type="password" class="text" name="new_password">
                         </div>
                     </div>
+                    <div class="form-group">
+                        <input type="checkbox" name="show_password" onclick="show_hide()">
+                        <label for="show_password">Show Password</label>
+                    </div>
                     <input type="submit" value="Submit">&nbsp;
                     <a href="login.php">Login Instead</a>
                 </form>
@@ -40,5 +44,15 @@ if (!isset($_SESSION["can_change_password"])) {
                 </div>
             </main>
         </div>
+        <script>
+            function show_hide() {
+                var x = document.getElementById("new_password");
+                if (x.type === "password") {
+                    x.type = "text";
+                } else {
+                    x.type = "password";
+                }
+            }
+        </script>
     </body>
 </html>
