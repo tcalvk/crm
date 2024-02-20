@@ -7,6 +7,18 @@ if (!isset($_SESSION["logged_in"])) {
 include '../view/header.php';
 ?>
 
+<body onload="hide_elements()">
+<script>
+    var contract_type = <?php echo(json_encode($contract_info['ContractType'])); ?>;
+    function hide_elements() {
+        if (contract_type == 'Evergreen') {
+            document.getElementById('accordion').style.visibility = 'visible';
+        } else {
+            document.getElementById('accordion').style.visibility = 'hidden';
+        }
+    }
+</script>
+
 <main>
     <br><br>
     <h5>Basic Information</h5>
@@ -43,12 +55,12 @@ include '../view/header.php';
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">Base Amount</th>
+                <th scope="col">Base Amount (Current Term)</th>
                 <th scope="col">CAM</th>
             </tr>
         </thead>
         <tbody>
-            <td><?php echo $contract_info['BaseAmt']; ?></td>
+            <td><?php echo $current_term['BaseAmt']; ?></td>
             <td><?php echo $contract_info['CAM']; ?></td>
         </tbody>
         <thead>
@@ -100,6 +112,40 @@ include '../view/header.php';
             <td><?php echo $contract_info['TotalPaymentsDue']; ?></td>
         </tbody>
     </table>
+
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Contract Terms
+                    </button>
+                </h5>
+            </div>
+            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Term Start Date</th>
+                                <th scope="col">Term End Date</th>
+                                <th scope="col">Base Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($contract_terms as $contract_term) : ?>
+                            <tr>
+                                <td><?php echo $contract_term['TermStartDate']; ?></td>
+                                <td><?php echo $contract_term['TermEndDate']; ?></td>
+                                <td><?php echo $contract_term['BaseAmt']; ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 
 <?php include '../view/footer.php'; ?>
