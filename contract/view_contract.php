@@ -45,9 +45,11 @@ include '../view/header.php';
         </tbody>
         <thead>
             <th scope="col">Company</th>
+            <th scope="col">Statement Auto Receive</th>
         </thead>
         <tbody>
             <td><?php echo $contract_info['CompanyName']; ?></td>
+            <td><?php echo $contract_info['StatementAutoReceive']; ?></td>
         </tbody>
     </table>
     <br><br>

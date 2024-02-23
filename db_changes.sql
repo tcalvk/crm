@@ -349,3 +349,8 @@ COMMIT;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
 status = 'updated'
+
+2/22/2024
+
+ALTER TABLE `Contract` ADD `StatementAutoReceive` BOOLEAN NULL AFTER `TestContract`;
+status = 'updated'
