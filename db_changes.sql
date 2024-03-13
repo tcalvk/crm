@@ -354,3 +354,13 @@ status = 'updated'
 
 ALTER TABLE `Contract` ADD `StatementAutoReceive` BOOLEAN NULL AFTER `TestContract`;
 status = 'updated'
+
+3/4/2024
+
+ALTER TABLE `Contract` CHANGE `StatementAutoReceive` `StatementAutoReceive` VARCHAR(8) NULL DEFAULT NULL;
+
+update Contract 
+set StatementAutoReceive = 'false';
+
+status = 'updated'
+

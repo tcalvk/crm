@@ -7,14 +7,27 @@ if (!isset($_SESSION["logged_in"])) {
 include '../view/header.php';
 ?>
 
-<body onload="hide_elements()">
+<body onload="load_functions()">
 <script>
     var contract_type = <?php echo(json_encode($contract_info['ContractType'])); ?>;
+    var statement_auto_receive = <?php echo(json_encode($contract_info['StatementAutoReceive'])); ?>;
+
+    function load_functions() {
+        hide_elements();
+        statement_auto_receive_view();
+    }
     function hide_elements() {
         if (contract_type == 'Evergreen') {
             document.getElementById('accordion').style.visibility = 'visible';
         } else {
             document.getElementById('accordion').style.visibility = 'hidden';
+        }
+    }
+    function statement_auto_receive_view() {
+        if (statement_auto_receive == 'false') {
+            document.getElementById("statement_auto_receive").checked = false;
+        } else {
+            document.getElementById("statement_auto_receive").checked = true;
         }
     }
 </script>
@@ -45,11 +58,11 @@ include '../view/header.php';
         </tbody>
         <thead>
             <th scope="col">Company</th>
-            <th scope="col">Statement Auto Receive</th>
+            <th scope="col">Statement Auto Receive &nbsp; <small><a href="" data-toggle="modal" data-target="#edit_statementautoreceive_modal">Edit</a></small></th></th>
         </thead>
         <tbody>
             <td><?php echo $contract_info['CompanyName']; ?></td>
-            <td><?php echo $contract_info['StatementAutoReceive']; ?></td>
+            <td><input type="checkbox" id="statement_auto_receive" disabled></td>        
         </tbody>
     </table>
     <br><br>
@@ -148,6 +161,35 @@ include '../view/header.php';
             </div>
         </div>
     </div>
+
+    <!-- List of Modals -->
+    <div class="modal fade" id="edit_statementautoreceive_modal" tabindex="-1" role="dialog" aria-labelledby="edit_statementautoreceive_modal_label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="edit_statementautoreceive_modal_label">Statement Auto Receive</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="index.php" method="post">
+                        <input type="hidden" name="action" value="edit_statementautoreceive">
+                        <input type="hidden" name="contract_id" value="<?php echo $contract_info['ContractId']; ?>">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="new_statementautoreceive" id="new_statementautoreceive">
+                            <label class="form-check-label" for="new_statementautoreceive">Statement Overdue Notifications</label>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Save">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </main>
 
 <?php include '../view/footer.php'; ?>

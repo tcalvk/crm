@@ -49,6 +49,15 @@ if ($action == 'view_contract') {
     } else {
         header('Location: view/record_access_error.php');
     }
+} else if ($action == 'edit_statementautoreceive') {
+    $contract_id = filter_input(INPUT_POST, 'contract_id');
+    if (isset($_POST['new_statementautoreceive'])) {
+        $col_val = 'true';
+    } else {
+        $col_val = 'false';
+    }
+    $update_db = $contracts_db->update_statementautoreceive($contract_id, $col_val);
+    header('Location: .?action=view_contract&contract_id=' . $contract_id); 
 }
 
 ?>

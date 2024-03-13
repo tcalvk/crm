@@ -207,6 +207,23 @@ class LogStatementsDB {
         $statement->closeCursor();
         return true;
     }
+    public function get_statements_due_autoreceive_test() {
+        $db = Database::getDB();
+        $query = 'select ls.StatementNumber, c.TestContract, c.StatementAutoReceive, ls.TotalAmt, c.ContractType, c.NumPaymentsDue, c.ContractId, u.email, c.Name "ContractName", ct.Name "CustomerName", cast(ls.CreatedDate as date) "CreatedDate"
+        from LogStatements ls 
+        left join Contract c on ls.ContractId = c.ContractId
+        left join Customer ct on c.CustomerId = ct.CustomerId 
+        left join user u on ct.userId = u.userId
+        where c.StatementAutoReceive = "true"
+        and ls.DueDate = current_date()
+        and ls.PaidDate is null 
+        and c.TestContract = 1'; 
+        $statement = $db->prepare($query);
+        $statement->execute();
+        $statements = $statement->fetchAll();
+        $statement->closeCursor();
+        return $statements;
+    }
 }
 
 ?>

@@ -143,6 +143,18 @@ class ContractsDB {
         $statement->closeCursor();
         return $contracts;
     }
+    public function update_statementautoreceive($contract_id, $col_val) {
+        $db = Database::getDB();
+        $query = 'update Contract
+        set StatementAutoReceive = :ColVal
+        where ContractId = :ContractId';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':ColVal', $col_val);
+        $statement->bindValue(':ContractId', $contract_id);
+        $statement->execute();
+        $statement->closeCursor();
+        return true;
+    }
 }
 
 ?>

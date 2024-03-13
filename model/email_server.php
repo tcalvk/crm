@@ -185,6 +185,42 @@ class EmailServer {
 
         return true;
     }
+    public function statement_auto_received($email_address, $statement_number, $contract_name, $customer_name, $created_date) {
+        $mail = new PHPMailer(true);
+        //Server settings
+        $mail->SMTPDebug = SMTP::DEBUG_SERVER;                 
+        $mail->isSMTP();                                   
+        $mail->Host       = 'smtp.gmail.com';                    
+        $mail->SMTPAuth   = true;                                    
+        $mail->Username   = 'corsaire.tech@gmail.com';                    
+        $mail->Password = 'gkdaufpbyvjggvkq';                           
+        $mail->SMTPSecure = 'tls';         
+        $mail->Port       = 587;   
+        $mail->SMTPDebug = 1;
+        $mail->setFrom('corsaire.tech@gmail.com', 'Corsaire Tech Account Services');
+
+        //Recipient
+        $mail->addAddress($email_address);    
+        
+        //Content
+        $mail->isHTML(true);                             
+        $mail->Subject = 'Statement Auto Received';
+        $body = 'This is a courtesy email from Corsaire Tech letting you know that your statement was automatically received. See the details below: 
+        <br><br>';
+        $body .= 'Statement Number: '. $statement_number . '<br>';
+        $body .= 'Customer Name: '. $customer_name . '<br>';
+        $body .= 'Contract Name: '. $contract_name . '<br>';
+        $body .= 'Statement Sent: '. $created_date . '<br>';
+        $body .= 'You can view and edit your statements at http://corsairetech.com <br><br>';
+        $body .= "Best Regards, <br><br>";
+        $body .= "Corsaire Tech";
+        $mail->Body    = $body;
+        $mail->AltBody = 'Your statement was auto received.';
+    
+        $mail->send();
+
+        return true;
+    }
 }
 
 ?>
