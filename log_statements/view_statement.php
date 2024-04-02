@@ -6,9 +6,16 @@ if (!isset($_SESSION["logged_in"])) {
 
 include '../view/header.php';
 ?>
-<body onload="hide_elements()">
+<body onload="load_functions()">
 <script>
     var display = <?php echo(json_encode($display)); ?>;
+    var display_markpaid = <?php echo(json_encode($display_markpaid)); ?>
+    
+    function load_functions() {
+        hide_elements();
+        hide_markpaid();
+    }
+
     function hide_elements() {
         if (display == 1) {
             document.getElementById('action_dropdown').style.visibility = 'visible';
@@ -16,6 +23,14 @@ include '../view/header.php';
         } else {
             document.getElementById('action_dropdown').style.visibility = 'hidden';
             document.getElementById('write_off_alert').style.visibility = 'visible';
+        }
+    }
+
+    function hide_markpaid() {
+        if (display_markpaid == 1) {
+            document.getElementById('mark_paid_button').style.visibility = 'visible';
+        } else {
+            document.getElementById('mark_paid_button').style.visibility = 'hidden';
         }
     }
 </script>
@@ -32,7 +47,7 @@ include '../view/header.php';
             <li id="action_dropdown" class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <button type="button" class="dropdown-item" data-toggle="modal" data-target="#exampleModal">Mark as Paid</button>
+                    <button type="button" class="dropdown-item" id="mark_paid_button" data-toggle="modal" data-target="#exampleModal">Mark as Paid</button>
                     <form action="index.php" method="post">
                         <input type="hidden" name="action" value="clear_paid_date">
                         <input type="hidden" name="statement_number" value="<?php echo $statement['StatementNumber']; ?>">
@@ -105,6 +120,32 @@ include '../view/header.php';
             <tr>
                 <td></td>
                 <td><?php echo $statement['PaymentAmount']; ?></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br><br>
+
+    <h5>Automation</h5>
+    <i class="fa-solid fa-circle-info myDIV"></i>
+    <div class="hide">
+        <small><em>
+            <ul>
+                <li>Statement Auto Receive: This setting will allow statements to be automatically marked as paid in full upon statement due date. To enable for a contract's statements, navigate to any given contract.</li>
+            </ul>
+        </small></em>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Statement Auto Receive</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><?php echo $statement_auto_receive; ?></td>
+                <td></td>
             </tr>
         </tbody>
     </table>

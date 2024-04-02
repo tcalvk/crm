@@ -49,7 +49,7 @@ class LogStatementsDB {
     public function get_statement($statement_number) {
         $db = Database::getDB();
         $query = 'select ls.StatementNumber, cast(ls.CreatedDate as date) "CreatedDate", cast(ls.PaidDate as date) "PaidDate", ls.TotalAmt, ls.PaymentNumber,
-        cu.Name "CustomerName", cu.CustomerId, ls.WrittenOff, ls.PaymentAmount, ls.DueDate,
+        cu.Name "CustomerName", cu.CustomerId, ls.WrittenOff, ls.PaymentAmount, ls.DueDate, c.StatementAutoReceive,
         case 
             when p.Name is not null then p.Name 
             else p.Address1
@@ -207,17 +207,16 @@ class LogStatementsDB {
         $statement->closeCursor();
         return true;
     }
-    public function get_statements_due_autoreceive_test() {
+    public function get_statements_due_autoreceive() {
         $db = Database::getDB();
         $query = 'select ls.StatementNumber, c.TestContract, c.StatementAutoReceive, ls.TotalAmt, c.ContractType, c.NumPaymentsDue, c.ContractId, u.email, c.Name "ContractName", ct.Name "CustomerName", cast(ls.CreatedDate as date) "CreatedDate"
         from LogStatements ls 
         left join Contract c on ls.ContractId = c.ContractId
         left join Customer ct on c.CustomerId = ct.CustomerId 
-        left join user u on ct.userId = u.userId
+        left join users u on ct.userId = u.userId
         where c.StatementAutoReceive = "true"
         and ls.DueDate = current_date()
-        and ls.PaidDate is null 
-        and c.TestContract = 1'; 
+        and ls.PaidDate is null'; 
         $statement = $db->prepare($query);
         $statement->execute();
         $statements = $statement->fetchAll();

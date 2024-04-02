@@ -167,7 +167,7 @@ include '../view/header.php';
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="edit_statementautoreceive_modal_label">Statement Auto Receive</h5>
+                    <h5 class="modal-title" id="edit_statementautoreceive_modal_label">Statement Auto Receive Setting</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -178,7 +178,7 @@ include '../view/header.php';
                         <input type="hidden" name="contract_id" value="<?php echo $contract_info['ContractId']; ?>">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="new_statementautoreceive" id="new_statementautoreceive">
-                            <label class="form-check-label" for="new_statementautoreceive">Statement Overdue Notifications</label>
+                            <label class="form-check-label" for="new_statementautoreceive">Statement Auto Receive</label>
                         </div>
                 </div>
                 <div class="modal-footer">

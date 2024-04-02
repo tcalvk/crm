@@ -27,6 +27,18 @@ if ($action == 'view_statement') {
     } else {
         $display = 1;
     }
+    if ($statement['Status'] == 'Paid') {
+        $display_markpaid = 0;
+    } else if ($statement['Status'] == 'Partial Payment') {
+        $display_markpaid = 0;
+    } else {
+        $display_markpaid = 1;
+    }
+    if ($statement['StatementAutoReceive'] == 'true') {
+        $statement_auto_receive = 'This statement will be auto received on ' . $statement['DueDate'] . '.';
+    } else {
+        $statement_auto_receive = 'This statement will not be auto received.';
+    }
     include 'view_statement.php';
 } else if ($action == 'view_all') {
     $customer_id = filter_input(INPUT_GET, 'customer_id');

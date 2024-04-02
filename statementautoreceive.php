@@ -3,11 +3,15 @@ require __DIR__ . "/vendor/autoload.php";
 require 'model/email_server.php';
 require 'model/database.php';
 require 'model/log_statements_db.php';
+require 'model/log_fixed_payments_db.php';
+require 'model/contracts_db.php'; 
 
 $email_server = new EmailServer;
 $log_statements_db = new LogStatementsDB;
+$log_fixed_payments_db = new LogFixedPaymentsDB;
+$contracts_db = new ContractsDB;
 
-$statements = $log_statements_db->get_statements_due_autoreceive_test(); 
+$statements = $log_statements_db->get_statements_due_autoreceive(); 
 
 foreach ($statements as $statement):
     $statement_number = $statement['StatementNumber'];
@@ -32,5 +36,5 @@ foreach ($statements as $statement):
     
     $email_address = $statement['email'];
     $send_email = $email_server->statement_auto_received($email_address, $statement_number, $contract_name, $customer_name, $created_date);
-
+    unset($email_address);
 endforeach;
