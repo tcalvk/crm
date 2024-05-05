@@ -364,3 +364,12 @@ set StatementAutoReceive = 'false';
 
 status = 'updated'
 
+4/16/2024
+
+ALTER TABLE `Company` ADD `userId` INT AFTER `Zip`;
+
+ALTER TABLE Company
+ADD FOREIGN KEY (userId) REFERENCES users(userId); 
+
+status = 'updated'
+

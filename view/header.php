@@ -34,6 +34,9 @@
                         <a class="nav-link" href="/homepage.php">Home <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="/company/index.php?action=list_companies">Companies</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="/customer/index.php?action=list_customers">Customers</a>
                     </li>
                     <li class="nav-item">
