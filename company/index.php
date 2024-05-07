@@ -51,6 +51,53 @@ if ($action == 'list_companies') {
     
     $create_company = $companies_db->create_company($name, $address1, $address2, $address3, $city, $state_id, $zip, $user_id);
     header("Location: .?action=list_companies");
+} else if ($action == 'edit_name') {
+    $company_id = filter_input(INPUT_POST, 'company_id');
+    $new_name = filter_input(INPUT_POST, 'new_name');
+    $update_name = $companies_db->update_name($company_id, $new_name);
+    header("Location: .?action=view_company&company_id=" . $company_id);
+} else if ($action == 'edit_address1') {
+    $company_id = filter_input(INPUT_POST, 'company_id');
+    $new_address1 = filter_input(INPUT_POST, 'new_address1');
+    $update_address1 = $companies_db->update_address1($company_id, $new_address1);
+    header("Location: .?action=view_company&company_id=" . $company_id);
+} else if ($action == 'edit_address2') {
+    $company_id = filter_input(INPUT_POST, 'company_id');
+    $new_address2 = filter_input(INPUT_POST, 'new_address2');
+    $update_address2 = $companies_db->update_address2($company_id, $new_address2);
+    header("Location: .?action=view_company&company_id=" . $company_id);
+} else if ($action == 'edit_address3') {
+    $company_id = filter_input(INPUT_POST, 'company_id');
+    $new_address3 = filter_input(INPUT_POST, 'new_address3');
+    $update_address3 = $companies_db->update_address3($company_id, $new_address3);
+    header("Location: .?action=view_company&company_id=" . $company_id);
+} else if ($action == 'edit_city') {
+    $company_id = filter_input(INPUT_POST, 'company_id');
+    $new_city = filter_input(INPUT_POST, 'new_city');
+    $update_city = $companies_db->update_city($company_id, $new_city);
+    header("Location: .?action=view_company&company_id=" . $company_id);
+} else if ($action == 'edit_state_id') {
+    $company_id = filter_input(INPUT_POST, 'company_id');
+    $new_state_id = filter_input(INPUT_POST, 'new_state_id');
+    $update_state_id = $companies_db->update_state_id($company_id, $new_state_id);
+    header("Location: .?action=view_company&company_id=" . $company_id);
+} else if ($action == 'edit_zip') {
+    $company_id = filter_input(INPUT_POST, 'company_id');
+    $new_zip = filter_input(INPUT_POST, 'new_zip');
+    $update_zip = $companies_db->update_zip($company_id, $new_zip);
+    header("Location: .?action=view_company&company_id=" . $company_id);
+} else if ($action == 'delete_company') {
+    $company_id = filter_input(INPUT_POST, 'company_id');
+    // Check to see if the company appears in an active contract 
+    $contracts = $contracts_db->get_active_contracts_by_company($company_id);
+    if (!empty($contracts)) {
+        //header("Location: .?action=view_company&message=Cannot delete a company that is referenced on an active contract.&company_id=" . $company_id);
+        header("Location: .?action=view_company&message=Error: You cannot delete a company that is referenced on an active contract.&company_id=" . $company_id);
+    } else {
+        $deleted = date('Y-m-d') . ' ' . date('H:i:s');
+        $delete_company = $companies_db->delete_company($company_id, $deleted);
+        header("Location: .?action=list_companies");
+    }
 }
     /*else if ($action == 'edit_data') {
     $data_type = filter_input(INPUT_POST, 'date_type');

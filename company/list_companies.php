@@ -63,7 +63,6 @@ include '../view/header.php';
 ?>
 
 <main>
-<main>
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #FFFFFF;">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -141,7 +140,7 @@ include '../view/header.php';
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="state_id" class="col-form-label">City</label>
+                            <label for="state_id" class="col-form-label">State</label>
                             <select name="state_id" id="state_id" required>
                                 <?php foreach ($state_ids as $state_id): ?>
                                 <option value="<?php echo $state_id; ?>"><?php echo $state_id; ?></option>

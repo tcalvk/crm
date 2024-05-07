@@ -154,6 +154,18 @@ class ContractsDB {
         $statement->execute();
         $statement->closeCursor();
         return true;
+    } public function get_active_contracts_by_company($company_id) {
+        $db = Database::getDB();
+        $query = 'select c.ContractId
+        from Contract c 
+        where c.CompanyId = :CompanyId
+        and c.Deleted is null';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':CompanyId', $company_id);
+        $statement->execute();
+        $contracts = $statement->fetchAll();
+        $statement->closeCursor();
+        return $contracts;
     }
 }
 

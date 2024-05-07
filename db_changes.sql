@@ -373,3 +373,8 @@ ADD FOREIGN KEY (userId) REFERENCES users(userId);
 
 status = 'updated'
 
+5/5/2024
+ALTER TABLE `Company` ADD `Deleted` DATETIME NULL AFTER `Zip`;
+ALTER TABLE `Contract` ADD `Deleted` DATETIME NULL AFTER `StatementAutoReceive`;
+
+status = 'updated'
