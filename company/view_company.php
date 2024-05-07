@@ -161,7 +161,7 @@ include '../view/header.php';
                         <input type="hidden" name="company_id" value="<?php echo $company_info['CompanyId']; ?>">
                         <div class="form-group">
                             <label for="new_name" class="col-form-label">New Company Name:</label>
-                            <input type="text" name="new_name" id="new_name">
+                            <input type="text" name="new_name" id="new_name" placeholder="<?php echo $company_info['Name']; ?>">
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -177,7 +177,7 @@ include '../view/header.php';
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="edit_address1_modal_label">Edit Address1</h5>
+                    <h5 class="modal-title" id="edit_address1_modal_label">Edit Address 1</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -187,8 +187,8 @@ include '../view/header.php';
                         <input type="hidden" name="action" value="edit_address1">
                         <input type="hidden" name="company_id" value="<?php echo $company_info['CompanyId']; ?>">
                         <div class="form-group">
-                            <label for="new_address1" class="col-form-label">New Address1:</label>
-                            <input type="text" name="new_address1" id="new_address1">
+                            <label for="new_address1" class="col-form-label">New Address 1:</label>
+                            <input type="text" name="new_address1" id="new_address1" placeholder="<?php echo $company_info['Address1']; ?>">
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -204,7 +204,7 @@ include '../view/header.php';
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="edit_address2_modal_label">Edit Address2</h5>
+                    <h5 class="modal-title" id="edit_address2_modal_label">Edit Address 2</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -214,8 +214,8 @@ include '../view/header.php';
                         <input type="hidden" name="action" value="edit_address2">
                         <input type="hidden" name="company_id" value="<?php echo $company_info['CompanyId']; ?>">
                         <div class="form-group">
-                            <label for="new_address2" class="col-form-label">New Address2:</label>
-                            <input type="text" name="new_address2" id="new_address2">
+                            <label for="new_address2" class="col-form-label">New Address 2:</label>
+                            <input type="text" name="new_address2" id="new_address2" placeholder="<?php echo $company_info['Address2']; ?>">
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -231,7 +231,7 @@ include '../view/header.php';
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="edit_address3_modal_label">Edit Address3</h5>
+                    <h5 class="modal-title" id="edit_address3_modal_label">Edit Address 3</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -241,8 +241,8 @@ include '../view/header.php';
                         <input type="hidden" name="action" value="edit_address3">
                         <input type="hidden" name="company_id" value="<?php echo $company_info['CompanyId']; ?>">
                         <div class="form-group">
-                            <label for="new_address3" class="col-form-label">New Address3:</label>
-                            <input type="text" name="new_address3" id="new_address3">
+                            <label for="new_address3" class="col-form-label">New Address 3:</label>
+                            <input type="text" name="new_address3" id="new_address3" placeholder="<?php echo $company_info['Address3']; ?>">
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -269,7 +269,7 @@ include '../view/header.php';
                         <input type="hidden" name="company_id" value="<?php echo $company_info['CompanyId']; ?>">
                         <div class="form-group">
                             <label for="new_city" class="col-form-label">New City:</label>
-                            <input type="text" name="new_city" id="new_city">
+                            <input type="text" name="new_city" id="new_city" placeholder="<?php echo $company_info['City']; ?>">
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -327,7 +327,7 @@ include '../view/header.php';
                         <input type="hidden" name="company_id" value="<?php echo $company_info['CompanyId']; ?>">
                         <div class="form-group">
                             <label for="new_zip" class="col-form-label">New Zip:</label>
-                            <input type="text" name="new_zip" id="new_zip">
+                            <input type="text" name="new_zip" id="new_zip" placeholder="<?php echo $company_info['Zip']; ?>">
                         </div>
                 </div>
                 <div class="modal-footer">
