@@ -17,7 +17,8 @@ class ContractsDB {
         and c.StatementSendDate = 15
         and (c.TestContract is null or c.TestContract = 0)
         and str_to_date(concat(year(adddate(current_date(), interval 1 month)), "-", month(adddate(current_date(), interval 1 month)), "-", c.DueDate), "%Y-%m-%d") >= ctt.TermStartDate
-        and str_to_date(concat(year(adddate(current_date(), interval 1 month)), "-", month(adddate(current_date(), interval 1 month)), "-", c.DueDate), "%Y-%m-%d") <= ctt.TermEndDate';
+        and str_to_date(concat(year(adddate(current_date(), interval 1 month)), "-", month(adddate(current_date(), interval 1 month)), "-", c.DueDate), "%Y-%m-%d") <= ctt.TermEndDate
+        and c.Deleted is null';
         $statement = $db->prepare($query);
         $statement->execute();
         $contracts = $statement->fetchAll();
@@ -39,7 +40,8 @@ class ContractsDB {
                   left join users u on ct.userId = u.userId
                   where c.ContractType = "Fixed"
                   and c.StatementSendDate = 1
-                  and (c.TestContract is null or c.TestContract = 0)';
+                  and (c.TestContract is null or c.TestContract = 0)
+                  and c.Deleted is null';
         $statement = $db->prepare($query);
         $statement->execute();
         $contracts = $statement->fetchAll();
