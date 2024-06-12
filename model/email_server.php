@@ -9,9 +9,23 @@ require 'PHPMailer/src/Exception.php';
 require 'PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/src/SMTP.php';
 
-class EmailServer {
 
-    public function send_statement($email_recipients, $property_id, $date_file, $date_formatted, $company_name) {
+class EmailServer {
+    public function get_email_password($email_account_type) {
+        
+        // App Passwords // 
+        $corsaire_tech_app_password = 'dicdqnqzyhduwgkv';
+        $account_services_app_password = 'cjjinlfwnijbnukf';
+        ///////////////////
+
+        if ($email_account_type == 'internal') {
+            return $corsaire_tech_app_password; 
+        } else {
+            return $account_services_app_password; 
+        }
+    }
+
+    public function send_statement($email_recipients, $property_id, $date_file, $date_formatted, $company_name, $email_password) {
         $mail = new PHPMailer(true);
         //Server settings
         $mail->SMTPDebug = SMTP::DEBUG_SERVER;                 
@@ -19,14 +33,11 @@ class EmailServer {
         $mail->Host       = 'smtp.gmail.com';                    
         $mail->SMTPAuth   = true;                                  
         $mail->Username   = 'services.ondeckgroup@gmail.com';                    
-        $mail->Password   = 'wfyburtvnckuocil';   
-        //$mail->Username   = 'corsaire.tech@gmail.com';                    
-        //$mail->Password = 'jdvmznndcbujihhd';                           
+        $mail->Password   = $email_password;                         
         $mail->SMTPSecure = 'tls';         
         $mail->Port       = 587;   
         $mail->SMTPDebug = 1;
         $mail->setFrom('services.ondeckgroup@gmail.com', 'Account Services');
-        //$mail->setFrom('corsaire.tech@gmail.com', 'Account Services');
 
         //Recipients
         foreach ($email_recipients as $email_recipient) : 
@@ -50,7 +61,7 @@ class EmailServer {
 
         return true;
     }
-    public function send_code($code, $email) {
+    public function send_code($code, $email, $email_password) {
         $mail = new PHPMailer(true);
         //Server settings
         $mail->SMTPDebug = SMTP::DEBUG_SERVER;                 
@@ -58,7 +69,7 @@ class EmailServer {
         $mail->Host       = 'smtp.gmail.com';                    
         $mail->SMTPAuth   = true;                                  
         $mail->Username   = 'corsaire.tech@gmail.com';                    
-        $mail->Password   = 'gkdaufpbyvjggvkq';                              
+        $mail->Password   = $email_password;                             
         $mail->SMTPSecure = 'tls';         
         $mail->Port       = 587;   
         $mail->SMTPDebug = 0;
@@ -78,7 +89,7 @@ class EmailServer {
         $_SESSION["code"] = $code;
         return true;
     }
-    public function send_statement_test($email_recipients, $property_id, $date_file, $date_formatted, $company_name) {
+    public function send_statement_test($email_recipients, $property_id, $date_file, $date_formatted, $company_name, $email_password) {
         $mail = new PHPMailer(true);
         //Server settings
         $mail->SMTPDebug = SMTP::DEBUG_SERVER;                 
@@ -86,14 +97,11 @@ class EmailServer {
         $mail->Host       = 'smtp.gmail.com';                    
         $mail->SMTPAuth   = true;                                  
         $mail->Username   = 'services.ondeckgroup@gmail.com';                    
-        $mail->Password   = 'wfyburtvnckuocil';   
-        //$mail->Username   = 'corsaire.tech@gmail.com';                    
-        //$mail->Password = 'jdvmznndcbujihhd';                           
+        $mail->Password   = $email_password;                            
         $mail->SMTPSecure = 'tls';         
         $mail->Port       = 587;   
         $mail->SMTPDebug = 1;
         $mail->setFrom('services.ondeckgroup@gmail.com', 'Account Services');
-        //$mail->setFrom('corsaire.tech@gmail.com', 'Account Services');
 
         //Recipients
         foreach ($email_recipients as $email_recipient) : 
@@ -117,7 +125,7 @@ class EmailServer {
 
         return true;
     }
-    public function statements_sent_notification($contract_owner_email) {
+    public function statements_sent_notification($contract_owner_email, $email_password) {
         $mail = new PHPMailer(true);
         //Server settings
         $mail->SMTPDebug = SMTP::DEBUG_SERVER;                 
@@ -125,7 +133,7 @@ class EmailServer {
         $mail->Host       = 'smtp.gmail.com';                    
         $mail->SMTPAuth   = true;                                    
         $mail->Username   = 'corsaire.tech@gmail.com';                    
-        $mail->Password = 'gkdaufpbyvjggvkq';                           
+        $mail->Password = $email_password;                           
         $mail->SMTPSecure = 'tls';         
         $mail->Port       = 587;   
         $mail->SMTPDebug = 1;
@@ -148,7 +156,7 @@ class EmailServer {
 
         return true;
     }
-    public function statement_overdue_notification($user_email, $statement_number, $customer_name, $contract_name, $created_date, $due_date) {
+    public function statement_overdue_notification($user_email, $statement_number, $customer_name, $contract_name, $created_date, $due_date, $email_password) {
         $mail = new PHPMailer(true);
         //Server settings
         $mail->SMTPDebug = SMTP::DEBUG_SERVER;                 
@@ -156,7 +164,7 @@ class EmailServer {
         $mail->Host       = 'smtp.gmail.com';                    
         $mail->SMTPAuth   = true;                                    
         $mail->Username   = 'corsaire.tech@gmail.com';                    
-        $mail->Password = 'gkdaufpbyvjggvkq';                           
+        $mail->Password = $email_password;                           
         $mail->SMTPSecure = 'tls';         
         $mail->Port       = 587;   
         $mail->SMTPDebug = 1;
@@ -185,7 +193,7 @@ class EmailServer {
 
         return true;
     }
-    public function statement_auto_received($email_address, $statement_number, $contract_name, $customer_name, $created_date) {
+    public function statement_auto_received($email_address, $statement_number, $contract_name, $customer_name, $created_date, $email_password) {
         $mail = new PHPMailer(true);
         //Server settings
         $mail->SMTPDebug = SMTP::DEBUG_SERVER;                 
@@ -193,7 +201,7 @@ class EmailServer {
         $mail->Host       = 'smtp.gmail.com';                    
         $mail->SMTPAuth   = true;                                    
         $mail->Username   = 'corsaire.tech@gmail.com';                    
-        $mail->Password = 'gkdaufpbyvjggvkq';                           
+        $mail->Password = $email_password;                           
         $mail->SMTPSecure = 'tls';         
         $mail->Port       = 587;   
         $mail->SMTPDebug = 1;

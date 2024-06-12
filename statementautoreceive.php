@@ -35,6 +35,10 @@ foreach ($statements as $statement):
 
     
     $email_address = $statement['email'];
-    $send_email = $email_server->statement_auto_received($email_address, $statement_number, $contract_name, $customer_name, $created_date);
+
+    // get email password 
+    $email_account_type = 'internal';
+    $email_password = $email_server->get_email_password($email_account_type);
+    $send_email = $email_server->statement_auto_received($email_address, $statement_number, $contract_name, $customer_name, $created_date, $email_password);
     unset($email_address);
 endforeach;

@@ -91,7 +91,10 @@ foreach ($contracts as $contract) :
     file_put_contents("statements/" . "property" . $property_id . "_" . $date_file . ".pdf", $output);
     unset($pdf);
 
-    $send_email = $email_server->send_statement($email_recipients, $property_id, $date_file, $date_formatted, $company_name);
+    // Get email password 
+    $email_account_type = 'external';
+    $email_password = $email_server->get_email_password($email_account_type);
+    $send_email = $email_server->send_statement($email_recipients, $property_id, $date_file, $date_formatted, $company_name, $email_password);
 
     // Log the statement in the database
     $completed_date = date("Y-m-d");
@@ -102,7 +105,11 @@ foreach ($contracts as $contract) :
     unset($email_recipients);
     // Send a courtesy email notification
     $contract_owner_email = $contract['ContractOwnerEmail'];
-    $email_notification = $email_server->statements_sent_notification($contract_owner_email);
+
+    // get email password 
+    $email_account_type = 'internal';
+    $email_password = $email_server->get_email_password($email_account_type);
+    $email_notification = $email_server->statements_sent_notification($contract_owner_email, $email_password);
     unset($contract_owner_email);
 endforeach ; 
 ?>

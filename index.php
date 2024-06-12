@@ -71,7 +71,11 @@ if (!isset($_SESSION["logged_in"])) {
             // navigate to enter code page and send code 
             $_SESSION["userId"] = $account_exists['userId'];
             $code = mt_rand(100000, 999999);
-            $success = $email_server->send_code($code, $email);
+
+            // get the email password 
+            $email_account_type = 'internal';
+            $email_password = $email_server->get_email_password($email_account_type);
+            $success = $email_server->send_code($code, $email, $email_password);
             header("Location: enter_code.php?message=Code Sent");
         }
     } else if ($action == 'submit_code') {
