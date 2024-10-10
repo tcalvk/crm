@@ -6,7 +6,7 @@ class ContractsDB {
         cp.Address2 "CompanyAddress2", cp.Address3 "CompanyAddress3", cp.City "CompanyCity", cp.StateId
         "CompanyState", cp.Zip "CompanyZip", ct.Name "BillingName", ct.Attention, ct.Address1 "BillingAddress1", 
         ct.Address2 "BillingAddress2", ct.Address3 "BillingAddress3", ct.City "BillingCity", ct.StateId "BillingState", 
-        ct.Zip "BillingZip", ct.Email "BillingEmail", c.BaseAmt + c.CAM "Total", u.email "ContractOwnerEmail"
+        ct.Zip "BillingZip", ct.Email "BillingEmail", ctt.BaseAmt + c.CAM "Total", u.email "ContractOwnerEmail"
         from Contract c 
         left join Property p on c.PropertyId = p.PropertyId
         left join Company cp on p.OwnedBy = cp.CompanyId
