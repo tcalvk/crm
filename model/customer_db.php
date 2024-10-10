@@ -142,5 +142,24 @@ class CustomerDB {
         $statement->closeCursor();
         return $customers;
     }
+    public function create_customer($name, $address1, $address2, $address3, $city, $state_id, $zip, $phone, $email, $user_id) {
+        $db = Database::getDB();
+        $query = 'insert into Customer (Name, Address1, Address2, Address3, City, StateId, Zip, Phone, Email, userId)
+        values (:Name, :Address1, :Address2, :Address3, :City, :StateId, :Zip, :Phone, :Email, :userId)';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':Name', $name);
+        $statement->bindValue(':Address1', $address1);
+        $statement->bindValue(':Address2', $address2);
+        $statement->bindValue(':Address3', $address3);
+        $statement->bindValue(':City', $city);
+        $statement->bindValue(':StateId', $state_id);
+        $statement->bindValue(':Zip', $zip);
+        $statement->bindValue(':Phone', $phone);
+        $statement->bindValue(':Email', $email);
+        $statement->bindValue(':userId', $user_id);
+        $statement->execute();
+        $statement->closeCursor();
+        return true;
+    }
 }
 ?>
