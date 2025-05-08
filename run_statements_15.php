@@ -101,7 +101,7 @@ foreach ($contracts as $contract) :
     $due_date_string = $due_month . '/' . $due_day;
     $due_date = date("Y-m-d", strtotime($due_date_string));
     $contract_id = $contract['ContractId'];
-    $log_statement = $log_statements_db->log_evergreen_statement($invoice_number, $completed_date, $total, $contract_id, $due_date);
+    $log_statement = $log_statements_db->log_evergreen_statement($invoice_number, $completed_date, $total, $contract_id, $due_date, $base_amt, $cam);
     unset($email_recipients);
     // Send a courtesy email notification
     $contract_owner_email = $contract['ContractOwnerEmail'];

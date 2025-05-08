@@ -68,32 +68,44 @@ include '../view/header.php';
     <table class="table">
         <thead>
             <tr>
+                <th scope="col">Contract</th>
                 <th scope="col">Customer Name</th>
-                <th scope="col">Property</th>
             </tr>
         </thead>
         <tbody>
             <tr>
+                <td><a href="../contract/index.php?action=view_contract&contract_id=<?php echo $statement['ContractId']; ?>"><?php echo $statement['ContractName']; ?></a></td>
                 <td><a href="../customer/index.php?action=view_customer&customer_id=<?php echo $statement['CustomerId']; ?>"><?php echo $statement['CustomerName']; ?></a></td>
-                <td><?php echo $statement['Property']; ?></td>
             </tr>
             <tr>
                 <th scope="col">Sent Date</th>
-                <th scope="col">Total Amount</th>
+                <th scope="col">Base Amount</th>
             </tr>
             <tr>
             <td><?php echo $statement['CreatedDate']; ?></td>
-            <td>$<?php echo $statement['TotalAmt']; ?></td>
+            <td>$<?php echo $statement['BaseAmt']; ?></td>
             </tr>
         </tbody>
         <thead>
             <tr>
                 <th scope="col">Due Date</th>
+                <th scope="col">CAM</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td><?php echo $statement['DueDate']; ?></td>
+                <td>$<?php echo $statement['CAM']; ?></td>
+            </tr>
+        </tbody>
+        <thead>
+            <tr>
+                <th scope="col">Total Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>$<?php echo $statement['TotalAmt']; ?></td>
             </tr>
         </tbody>
     </table>
