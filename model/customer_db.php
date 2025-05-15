@@ -142,5 +142,27 @@ class CustomerDB {
         $statement->closeCursor();
         return $customers;
     }
+    public function create_customer($data) {
+        $db = Database::getDB();
+        $query = 'INSERT INTO Customer (Name, Address1, Address2, Address3, City, StateId, Zip, Phone, Email, userId)
+                VALUES (:Name, :Address1, :Address2, :Address3, :City, :StateId, :Zip, :Phone, :Email, :userId)';
+        $statement = $db->prepare($query);
+        foreach ($data as $key => $value) {
+            $statement->bindValue(":$key", $value);
+        }
+        $statement->execute();
+        $statement->closeCursor();
+        return true;
+    }
+    public function delete_customer($customer_id) {
+        $db = Database::getDB();
+        $query = 'delete from Customer 
+                 where CustomerId = :CustomerId';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':CustomerId', $customer_id);
+        $statement->execute();
+        $statement->closeCursor();
+        return true;
+    }
 }
 ?>
