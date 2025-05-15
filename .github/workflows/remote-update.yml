@@ -20,4 +20,4 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            bash /var/www/update-repo.sh
+            bash /var/www/update-crm.sh
