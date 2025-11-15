@@ -24,7 +24,7 @@ if (!isset($_SESSION["logged_in"])) {
             header("Location: login.php?message=Incorrect login credentials. Please try again.");
         } else {
             if ($check_user['email_is_validated'] == 1) {
-                $_SESSION["userId"] = $row['userId'];
+                $_SESSION["userId"] = $check_user['userId'];
                 $_SESSION["logged_in"] = true;
                 header("Location: homepage.php");
             } else {
