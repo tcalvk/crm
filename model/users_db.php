@@ -18,8 +18,6 @@ class UsersDB {
         if ($valid_password == false) {
             return false; 
         } else {
-            $_SESSION["userId"] = $row['userId'];
-            $_SESSION["logged_in"] = true;
             return $row;
         }
     }
@@ -141,6 +139,17 @@ class UsersDB {
         } else {
             return $row;
         }
+    }
+    public function validate_email($email) {
+        $db = Database::getDB();
+        $query = 'update users
+                 set email_is_validated = 1
+                 where email = :email';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':email', $email);
+        $statement->execute();
+        $statement->closeCursor();
+        return true;
     }
     public function update_firstname ($new_firstname, $user_id) {
         $db = Database::getDB();
