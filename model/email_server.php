@@ -89,6 +89,106 @@ class EmailServer {
         $_SESSION["code"] = $code;
         return true;
     }
+    public function send_payment_invite($email, $code, $link, $email_password, $user_full_name, $company_name) {
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'corsaire.tech@gmail.com';
+        $mail->Password   = $email_password;
+        $mail->SMTPSecure = 'tls';
+        $mail->Port       = 587;
+        $mail->SMTPDebug  = 0;
+        $mail->setFrom('corsaire.tech@gmail.com', 'Corsaire Tech');
+        $mail->addAddress($email);
+        $mail->isHTML(true);
+        $mail->Subject = 'Set up your payment method';
+        $body = <<<HTML
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Connect Bank Account</title>
+  </head>
+  <body style="margin:0; padding:0; background-color:#f5f5f5;">
+    <!-- Full-width wrapper -->
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#f5f5f5; padding:24px 0;">
+      <tr>
+        <td align="center">
+          <!-- Main card -->
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:600px; background-color:#ffffff; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.06);">
+            <tr>
+              <td style="padding:32px 24px 16px 24px; text-align:center; font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color:#111827;">
+                <!-- Heading -->
+                <h1 style="margin:0 0 16px 0; font-size:22px; font-weight:600; line-height:1.3;">
+                  {User Name} from {Company Name}
+                </h1>
+
+                <!-- Intro text -->
+                <p style="margin:0 0 24px 0; font-size:15px; line-height:1.6; color:#4b5563;">
+                  is inviting you to add your banking information for automatic billing.
+                </p>
+
+                <!-- Access code label -->
+                <p style="margin:0; font-size:14px; color:#4b5563;">
+                  Access code
+                </p>
+
+                <!-- Access code value -->
+                <p style="margin:4px 0 24px 0; font-size:26px; font-weight:600; letter-spacing:2px; color:#111827;">
+                  {Access Code}
+                </p>
+
+                <!-- Primary button -->
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto 16px auto;">
+                  <tr>
+                    <td align="center" bgcolor="#2563eb" style="border-radius:6px;">
+                      <a href="{Connect URL}"
+                         style="display:inline-block; padding:12px 28px; font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:15px; font-weight:600; text-decoration:none; color:#ffffff; border-radius:6px;">
+                        CONNECT BANK ACCOUNT
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- Helper text -->
+                <p style="margin:0 0 8px 0; font-size:13px; color:#6b7280;">
+                  Enter the access code above after clicking the button to securely link your bank account.
+                </p>
+
+                <!-- Fallback link -->
+                <p style="margin:8px 0 0 0; font-size:11px; color:#9ca3af;">
+                  If the button doesn't work, copy and paste this link into your browser:<br />
+                  <span style="word-break:break-all;">{Connect URL}</span>
+                </p>
+              </td>
+            </tr>
+
+            <!-- Optional footer -->
+            <tr>
+              <td style="padding:16px 24px 24px 24px; text-align:center; font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:11px; color:#9ca3af;">
+                You received this email because {Company Name} uses our service for secure bank account connections.
+              </td>
+            </tr>
+          </table>
+          <!-- /Main card -->
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
+HTML;
+        $safe_replacements = [
+            '{User Name}'    => htmlspecialchars($user_full_name, ENT_QUOTES, 'UTF-8'),
+            '{Company Name}' => htmlspecialchars($company_name, ENT_QUOTES, 'UTF-8'),
+            '{Access Code}'  => htmlspecialchars($code, ENT_QUOTES, 'UTF-8'),
+            '{Connect URL}'  => htmlspecialchars($link, ENT_QUOTES, 'UTF-8'),
+        ];
+        $mail->Body    = strtr($body, $safe_replacements);
+        $mail->AltBody = strtr('Use the access code {Access Code} to connect your bank account at {Connect URL}.', $safe_replacements);
+        $mail->send();
+        return true;
+    }
     public function send_statement_test($email_recipients, $property_id, $date_file, $date_formatted, $company_name, $email_password) {
         $mail = new PHPMailer(true);
         //Server settings

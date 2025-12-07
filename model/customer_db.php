@@ -24,6 +24,30 @@ class CustomerDB {
         $statement->closeCursor();
         return $customer_info;
     }
+    public function update_customer($customer_id, $data) {
+        $db = Database::getDB();
+        $query = 'update Customer
+                  set Name = :Name,
+                      Address1 = :Address1,
+                      Address2 = :Address2,
+                      Address3 = :Address3,
+                      City = :City,
+                      StateId = :StateId,
+                      Zip = :Zip
+                  where CustomerId = :CustomerId';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':Name', $data['Name']);
+        $statement->bindValue(':Address1', $data['Address1']);
+        $statement->bindValue(':Address2', $data['Address2']);
+        $statement->bindValue(':Address3', $data['Address3']);
+        $statement->bindValue(':City', $data['City']);
+        $statement->bindValue(':StateId', $data['StateId']);
+        $statement->bindValue(':Zip', $data['Zip']);
+        $statement->bindValue(':CustomerId', $customer_id);
+        $statement->execute();
+        $statement->closeCursor();
+        return true;
+    }
     public function update_name($customer_id, $new_value) {
         $db = Database::getDB();
         $query = 'update Customer 
@@ -144,10 +168,20 @@ class CustomerDB {
     }
     public function create_customer($data) {
         $db = Database::getDB();
+        $defaults = [
+            'Address2' => '',
+            'Address3' => '',
+            'City' => '',
+            'StateId' => '',
+            'Zip' => '',
+            'Phone' => '',
+            'Email' => '',
+        ];
+        $payload = array_merge($defaults, $data);
         $query = 'INSERT INTO Customer (Name, Address1, Address2, Address3, City, StateId, Zip, Phone, Email, userId)
                 VALUES (:Name, :Address1, :Address2, :Address3, :City, :StateId, :Zip, :Phone, :Email, :userId)';
         $statement = $db->prepare($query);
-        foreach ($data as $key => $value) {
+        foreach ($payload as $key => $value) {
             $statement->bindValue(":$key", $value);
         }
         $statement->execute();

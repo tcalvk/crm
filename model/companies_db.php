@@ -149,6 +149,26 @@ class CompaniesDB {
         $statement->closeCursor();
         return true;
     }
+    public function get_company_from_customer($customer_id) {
+        $db = Database::getDB();
+        $query =    'with all_co as (
+                        select co.*,
+                        row_number() over(partition by Ct.CustomerId order by ContractId desc) as rownum 
+                        from Company co 
+                        left join Contract ct 
+                        on co.CompanyId = ct.CompanyId 
+                        where 1=1 
+                        and ct.Deleted is null 
+                        and ct.CustomerId = :CustomerId
+                    )
+                    select * from all_co where rownum = 1';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':CustomerId', $customer_id);
+        $statement->execute();
+        $company_info = $statement->fetch();
+        $statement->closeCursor(); 
+        return $company_info;
+    }
 }
 
 ?>

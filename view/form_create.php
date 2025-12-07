@@ -6,7 +6,7 @@ if (!isset($_SESSION["logged_in"])) {
 
 include 'header.php';
 
-$required_fields = ['Name', 'Address1', 'City', 'StateId', 'Zip', 'Email']; // adjust as needed
+$required_fields = ['Name', 'Address1', 'City', 'StateId', 'Zip']; // adjust as needed
 ?>
 
 <main class="container mt-4">
