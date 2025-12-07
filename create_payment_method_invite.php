@@ -42,6 +42,7 @@ try {
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Could Not Locate Critical Info: ' . $e->getMessage()]);
+    exit;
 }
 
 try {
