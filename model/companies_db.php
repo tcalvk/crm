@@ -153,7 +153,7 @@ class CompaniesDB {
         $db = Database::getDB();
         $query =    'with all_co as (
                         select co.*,
-                        row_number() over(partition by Ct.CustomerId order by ContractId desc) as rownum 
+                        row_number() over(partition by ct.CustomerId order by ContractId desc) as rownum 
                         from Company co 
                         left join Contract ct 
                         on co.CompanyId = ct.CompanyId 
