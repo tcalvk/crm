@@ -18,9 +18,11 @@ require_once __DIR__ . '/model/BillingService.php';
 require_once __DIR__ . '/model/users_db.php';
 require_once __DIR__ . '/model/email_server.php';
 require_once __DIR__ . '/model/companies_db.php';
+require __DIR__ . '/model/contact_db.php';
 
 $usersDb = new UsersDB();
 $companies_db = new CompaniesDB();
+$contact_db = new ContactDB();
 
 $stripeCustomerId = trim($_POST['stripe_customer_id'] ?? $_GET['stripe_customer_id'] ?? '');
 $customerId = trim($_POST['customer_id'] ?? $_GET['customer_id'] ?? '');
@@ -67,8 +69,14 @@ try {
         if (empty($email)) {
             throw new Exception('Owner user has no email; cannot create Stripe customer.');
         }
-        $inviteeEmail = $email;
-        $inviteeName = $name;
+
+        $primary_contact = $contact_db->get_primary_contact($customerId);
+        if (!$primary_contact || empty($primary_contact['Email'])) {
+            throw new Exception('No primary contact with an email for this customer.');
+        }
+
+        $inviteeEmail = $primary_contact['Email'];
+        $inviteeName = trim(($primary_contact['FirstName'] ?? '') . ' ' . ($primary_contact['LastName'] ?? '')) ?: $name;
 
         // 3) Ensure Stripe customer exists (creates if missing) and capture both external id and local row id
         $stripeCustomerRow = BillingService::ensureStripeCustomerRow($customerId, $email, $name);

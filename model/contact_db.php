@@ -52,9 +52,9 @@ class ContactDB {
     public function create_contact($data) {
         $db = Database::getDB();
         $query = 'insert into Contact
-                    (FirstName, LastName, Address1, Address2, City, StateId, Zip, Phone, Email, ReceiveStatements, CustomerId)
+                    (FirstName, LastName, Address1, Address2, City, StateId, Zip, Phone, Email, ReceiveStatements, IsPrimary, CustomerId)
                   values
-                    (:FirstName, :LastName, :Address1, :Address2, :City, :StateId, :Zip, :Phone, :Email, :ReceiveStatements, :CustomerId)';
+                    (:FirstName, :LastName, :Address1, :Address2, :City, :StateId, :Zip, :Phone, :Email, :ReceiveStatements, :IsPrimary, :CustomerId)';
         $statement = $db->prepare($query);
         $statement->bindValue(':FirstName', $data['FirstName']);
         $statement->bindValue(':LastName', $data['LastName']);
@@ -66,10 +66,29 @@ class ContactDB {
         $statement->bindValue(':Phone', $data['Phone']);
         $statement->bindValue(':Email', $data['Email']);
         $statement->bindValue(':ReceiveStatements', (int) $data['ReceiveStatements'], PDO::PARAM_INT);
+        $statement->bindValue(':IsPrimary', (int) $data['IsPrimary'], PDO::PARAM_INT);
         $statement->bindValue(':CustomerId', $data['CustomerId'], PDO::PARAM_INT);
         $statement->execute();
         $statement->closeCursor();
         return $db->lastInsertId();
+    }
+
+    public function clear_primary_for_customer($customer_id, $exclude_contact_id = null) {
+        $db = Database::getDB();
+        $query = 'update Contact
+                  set IsPrimary = 0
+                  where CustomerId = :CustomerId';
+        if ($exclude_contact_id !== null) {
+            $query .= ' and ContactId != :ContactId';
+        }
+        $statement = $db->prepare($query);
+        $statement->bindValue(':CustomerId', $customer_id, PDO::PARAM_INT);
+        if ($exclude_contact_id !== null) {
+            $statement->bindValue(':ContactId', $exclude_contact_id, PDO::PARAM_INT);
+        }
+        $statement->execute();
+        $statement->closeCursor();
+        return true;
     }
 
     public function update_contact($contact_id, $data) {
@@ -84,7 +103,8 @@ class ContactDB {
                       Zip = :Zip,
                       Phone = :Phone,
                       Email = :Email,
-                      ReceiveStatements = :ReceiveStatements
+                      ReceiveStatements = :ReceiveStatements,
+                      IsPrimary = :IsPrimary
                   where ContactId = :ContactId';
         $statement = $db->prepare($query);
         $statement->bindValue(':FirstName', $data['FirstName']);
@@ -97,6 +117,7 @@ class ContactDB {
         $statement->bindValue(':Phone', $data['Phone']);
         $statement->bindValue(':Email', $data['Email']);
         $statement->bindValue(':ReceiveStatements', (int) $data['ReceiveStatements'], PDO::PARAM_INT);
+        $statement->bindValue(':IsPrimary', (int) $data['IsPrimary'], PDO::PARAM_INT);
         $statement->bindValue(':ContactId', $contact_id, PDO::PARAM_INT);
         $statement->execute();
         $statement->closeCursor();
@@ -128,6 +149,20 @@ class ContactDB {
         $statement->execute();
         $statement->closeCursor();
         return true;
+    }
+
+    public function get_primary_contact($customer_id) {
+        $db = Database::getDB();
+        $query = 'select *
+                  from Contact
+                  where CustomerId = :CustomerId
+                  and IsPrimary = 1';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':CustomerId', $customer_id);
+        $statement->execute();
+        $contact = $statement->fetch();
+        $statement->closeCursor();
+        return $contact;
     }
 }
 

@@ -34,6 +34,7 @@ function collect_contact_payload() {
         'Phone' => trim((string) filter_input(INPUT_POST, 'Phone')),
         'Email' => trim((string) filter_input(INPUT_POST, 'Email')),
         'ReceiveStatements' => filter_input(INPUT_POST, 'ReceiveStatements') ? 1 : 0,
+        'IsPrimary' => filter_input(INPUT_POST, 'IsPrimary') ? 1 : 0,
     ];
 }
 
@@ -132,6 +133,9 @@ if ($action == 'customer_contacts') {
         include 'contact_edit.php';
         exit;
     }
+    if (!empty($payload['IsPrimary'])) {
+        $contact_db->clear_primary_for_customer($contact['CustomerId'], $contact_id);
+    }
     $contact_db->update_contact($contact_id, $payload);
     header('Location: index.php?action=view_contact&contact_id=' . $contact_id);
 } else if ($action == 'create_contact') {
@@ -158,6 +162,7 @@ if ($action == 'customer_contacts') {
         'Phone' => '',
         'Email' => '',
         'ReceiveStatements' => 1,
+        'IsPrimary' => 0,
         'CustomerId' => $customer_id,
     ];
     include 'contact_create.php';
@@ -180,6 +185,9 @@ if ($action == 'customer_contacts') {
         $contact = $payload;
         include 'contact_create.php';
         exit;
+    }
+    if (!empty($payload['IsPrimary'])) {
+        $contact_db->clear_primary_for_customer($customer_id);
     }
     $new_id = $contact_db->create_contact($payload);
     header('Location: index.php?action=view_contact&contact_id=' . $new_id);
