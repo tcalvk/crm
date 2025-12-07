@@ -107,11 +107,26 @@ class ContractsDB {
     }
     public function get_contract_info($contract_id) {
         $db = Database::getDB();
-        $query = 'select c.*, cu.userId, cu.Name "CustomerName", p.Name "PropertyName", co.Name "CompanyName"
+        $query = 'select 
+                    c.*, 
+                    cu.userId, 
+                    cu.Name "CustomerName", 
+                    p.Name "PropertyName", 
+                    co.Name "CompanyName",
+                    pm.StripePaymentMethodId,
+                    pm.StripeCustomerId,
+                    pm.stripe_payment_method_id,
+                    pm.AccountType,
+                    pm.BankName,
+                    pm.Last4,
+                    pm.AccountHolderType,
+                    pm.IsEnabled,
+                    pm.UpdatedAt
                  from Contract c 
                  left join Customer cu on c.CustomerId = cu.CustomerId 
                  left join Property p on c.PropertyId = p.PropertyId 
                  left join Company co on c.CompanyId = co.CompanyId
+                 left join StripePaymentMethods pm on c.StripePaymentMethodId = pm.StripePaymentMethodId
                  where c.ContractId = :ContractId';
         $statement = $db->prepare($query);
         $statement->bindValue(':ContractId', $contract_id);
@@ -119,6 +134,16 @@ class ContractsDB {
         $contract_info = $statement->fetch();
         $statement->closeCursor();
         return $contract_info;
+    }
+    public function get_contract($contract_id) {
+        $db = Database::getDB();
+        $query = 'select * from Contract where ContractId = :ContractId';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':ContractId', $contract_id, PDO::PARAM_INT);
+        $statement->execute();
+        $contract = $statement->fetch();
+        $statement->closeCursor();
+        return $contract;
     }
     public function get_contracts_limit3($customer_id) {
         $db = Database::getDB();
@@ -128,6 +153,25 @@ class ContractsDB {
                  limit 3';
         $statement = $db->prepare($query);
         $statement->bindValue(':CustomerId', $customer_id);
+        $statement->execute();
+        $contracts = $statement->fetchAll();
+        $statement->closeCursor();
+        return $contracts;
+    }
+    public function get_contracts_by_customer($customer_id, $limit = null) {
+        $db = Database::getDB();
+        $query = 'select *
+                 from Contract
+                 where CustomerId = :CustomerId
+                 order by Name';
+        if ($limit !== null) {
+            $query .= ' limit :limit';
+        }
+        $statement = $db->prepare($query);
+        $statement->bindValue(':CustomerId', $customer_id, PDO::PARAM_INT);
+        if ($limit !== null) {
+            $statement->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+        }
         $statement->execute();
         $contracts = $statement->fetchAll();
         $statement->closeCursor();
@@ -156,7 +200,22 @@ class ContractsDB {
         $statement->execute();
         $statement->closeCursor();
         return true;
-    } public function get_active_contracts_by_company($company_id) {
+    }
+
+    public function update_payment_method($contract_id, $stripe_payment_method_id) {
+        $db = Database::getDB();
+        $query = 'update Contract
+        set StripePaymentMethodId = :StripePaymentMethodId
+        where ContractId = :ContractId';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':StripePaymentMethodId', $stripe_payment_method_id, PDO::PARAM_INT);
+        $statement->bindValue(':ContractId', $contract_id, PDO::PARAM_INT);
+        $statement->execute();
+        $statement->closeCursor();
+        return true;
+    } 
+    
+    public function get_active_contracts_by_company($company_id) {
         $db = Database::getDB();
         $query = 'select c.ContractId
         from Contract c 
@@ -168,6 +227,109 @@ class ContractsDB {
         $contracts = $statement->fetchAll();
         $statement->closeCursor();
         return $contracts;
+    }
+
+    public function create_contract($data) {
+        $db = Database::getDB();
+        $query = 'insert into Contract
+                (Name, PropertyId, CustomerId, CompanyId, BaseAmt, CAM, BillingCycleStart, BillingCycleEnd, DueDate, LateDate, LateFee, StatementSendDate, NumPaymentsDue, TotalPaymentsDue, ContractType, TestContract, StatementAutoReceive, StripePaymentMethodId)
+                values
+                (:Name, :PropertyId, :CustomerId, :CompanyId, :BaseAmt, :CAM, :BillingCycleStart, :BillingCycleEnd, :DueDate, :LateDate, :LateFee, :StatementSendDate, :NumPaymentsDue, :TotalPaymentsDue, :ContractType, :TestContract, :StatementAutoReceive, :StripePaymentMethodId)';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':Name', $data['Name']);
+        $statement->bindValue(':PropertyId', $data['PropertyId'], PDO::PARAM_INT);
+        $statement->bindValue(':CustomerId', $data['CustomerId'], PDO::PARAM_INT);
+        $statement->bindValue(':CompanyId', $data['CompanyId'], PDO::PARAM_INT);
+        $statement->bindValue(':BaseAmt', $data['BaseAmt']);
+        $statement->bindValue(':CAM', $data['CAM']);
+        $statement->bindValue(':BillingCycleStart', $data['BillingCycleStart'], PDO::PARAM_INT);
+        $statement->bindValue(':BillingCycleEnd', $data['BillingCycleEnd']);
+        $statement->bindValue(':DueDate', $data['DueDate']);
+        $statement->bindValue(':LateDate', $data['LateDate'], PDO::PARAM_INT);
+        $statement->bindValue(':LateFee', $data['LateFee']);
+        $statement->bindValue(':StatementSendDate', $data['StatementSendDate'], PDO::PARAM_INT);
+        $statement->bindValue(':NumPaymentsDue', $data['NumPaymentsDue'], PDO::PARAM_INT);
+        $statement->bindValue(':TotalPaymentsDue', $data['TotalPaymentsDue'], PDO::PARAM_INT);
+        $statement->bindValue(':ContractType', $data['ContractType']);
+        $statement->bindValue(':TestContract', $data['TestContract']);
+        $statement->bindValue(':StatementAutoReceive', $data['StatementAutoReceive']);
+        $statement->bindValue(':StripePaymentMethodId', $data['StripePaymentMethodId'], PDO::PARAM_INT);
+        $statement->execute();
+        $statement->closeCursor();
+        return $db->lastInsertId();
+    }
+
+    public function update_contract_fields($contract_id, $data) {
+        $db = Database::getDB();
+        $query = 'update Contract
+                set Name = :Name,
+                    PropertyId = :PropertyId,
+                    CustomerId = :CustomerId,
+                    CompanyId = :CompanyId,
+                    BaseAmt = :BaseAmt,
+                    CAM = :CAM,
+                    BillingCycleStart = :BillingCycleStart,
+                    BillingCycleEnd = :BillingCycleEnd,
+                    DueDate = :DueDate,
+                    LateDate = :LateDate,
+                    LateFee = :LateFee,
+                    StatementSendDate = :StatementSendDate,
+                    NumPaymentsDue = :NumPaymentsDue,
+                    TotalPaymentsDue = :TotalPaymentsDue,
+                    ContractType = :ContractType,
+                    TestContract = :TestContract,
+                    StatementAutoReceive = :StatementAutoReceive,
+                    StripePaymentMethodId = :StripePaymentMethodId
+                where ContractId = :ContractId';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':Name', $data['Name']);
+        $statement->bindValue(':PropertyId', $data['PropertyId'], PDO::PARAM_INT);
+        $statement->bindValue(':CustomerId', $data['CustomerId'], PDO::PARAM_INT);
+        $statement->bindValue(':CompanyId', $data['CompanyId'], PDO::PARAM_INT);
+        $statement->bindValue(':BaseAmt', $data['BaseAmt']);
+        $statement->bindValue(':CAM', $data['CAM']);
+        $statement->bindValue(':BillingCycleStart', $data['BillingCycleStart'], PDO::PARAM_INT);
+        $statement->bindValue(':BillingCycleEnd', $data['BillingCycleEnd']);
+        $statement->bindValue(':DueDate', $data['DueDate']);
+        $statement->bindValue(':LateDate', $data['LateDate'], PDO::PARAM_INT);
+        $statement->bindValue(':LateFee', $data['LateFee']);
+        $statement->bindValue(':StatementSendDate', $data['StatementSendDate'], PDO::PARAM_INT);
+        $statement->bindValue(':NumPaymentsDue', $data['NumPaymentsDue'], PDO::PARAM_INT);
+        $statement->bindValue(':TotalPaymentsDue', $data['TotalPaymentsDue'], PDO::PARAM_INT);
+        $statement->bindValue(':ContractType', $data['ContractType']);
+        $statement->bindValue(':TestContract', $data['TestContract']);
+        $statement->bindValue(':StatementAutoReceive', $data['StatementAutoReceive']);
+        $statement->bindValue(':StripePaymentMethodId', $data['StripePaymentMethodId'], PDO::PARAM_INT);
+        $statement->bindValue(':ContractId', $contract_id, PDO::PARAM_INT);
+        $statement->execute();
+        $statement->closeCursor();
+        return true;
+    }
+
+    public function delete_contract($contract_id) {
+        $db = Database::getDB();
+        $query = 'delete from Contract where ContractId = :ContractId';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':ContractId', $contract_id, PDO::PARAM_INT);
+        $statement->execute();
+        $statement->closeCursor();
+        return true;
+    }
+
+    public function delete_multiple_contracts($contract_ids) {
+        if (empty($contract_ids)) {
+            return true;
+        }
+        $db = Database::getDB();
+        $placeholders = implode(',', array_fill(0, count($contract_ids), '?'));
+        $query = "delete from Contract where ContractId in ($placeholders)";
+        $statement = $db->prepare($query);
+        foreach ($contract_ids as $index => $id) {
+            $statement->bindValue($index + 1, (int) $id, PDO::PARAM_INT);
+        }
+        $statement->execute();
+        $statement->closeCursor();
+        return true;
     }
 }
 

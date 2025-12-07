@@ -35,7 +35,7 @@ class LogStatementsDB {
     }
     public function get_statements_limit3($customer_id) {
         $db = Database::getDB();
-        $query = 'select ls.StatementNumber, cast(ls.CreatedDate as date) "CreatedDate", cast(ls.PaidDate as date) "PaidDate", ls.TotalAmt, ls.PaymentNumber, p.Name "PropertyName", p.Address1
+        $query = 'select ls.StatementNumber, cast(ls.CreatedDate as date) "CreatedDate", cast(ls.PaidDate as date) "PaidDate", cast(ls.DueDate as date) "DueDate", ls.TotalAmt, ls.PaymentNumber, p.Name "PropertyName", p.Address1
         from LogStatements ls 
         left join Contract c on ls.ContractId = c.ContractId
         left join Customer cu on c.CustomerId = cu.CustomerId
@@ -78,7 +78,7 @@ class LogStatementsDB {
     }
     public function get_statements($customer_id) {
         $db = Database::getDB();
-        $query = 'select ls.StatementNumber, cast(ls.CreatedDate as date) "CreatedDate", cast(ls.PaidDate as date) "PaidDate", ls.TotalAmt, ls.PaymentNumber, p.Name "PropertyName", p.Address1
+        $query = 'select ls.StatementNumber, cast(ls.CreatedDate as date) "CreatedDate", cast(ls.PaidDate as date) "PaidDate", cast(ls.DueDate as date) "DueDate", ls.TotalAmt, ls.PaymentNumber, p.Name "PropertyName", p.Address1
         from LogStatements ls 
         left join Contract c on ls.ContractId = c.ContractId
         left join Customer cu on c.CustomerId = cu.CustomerId
@@ -114,6 +114,15 @@ class LogStatementsDB {
                  PaidDate = null, 
                  PaymentAmount = null
                  where StatementNumber = :StatementNumber';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':StatementNumber', $statement_number);
+        $statement->execute();
+        $statement->closeCursor();
+        return true;
+    }
+    public function delete_statement($statement_number) {
+        $db = Database::getDB();
+        $query = 'delete from LogStatements where StatementNumber = :StatementNumber';
         $statement = $db->prepare($query);
         $statement->bindValue(':StatementNumber', $statement_number);
         $statement->execute();
@@ -161,6 +170,45 @@ class LogStatementsDB {
             $count = $row_count['RowCount'];
         }
         return $invoice_number;
+    }
+    public function create_manual_statement(array $data) {
+        $db = Database::getDB();
+        $query = 'insert into LogStatements (
+                    StatementNumber,
+                    CreatedDate,
+                    TotalAmt,
+                    ContractId,
+                    DueDate,
+                    BaseAmt,
+                    CAM,
+                    PaymentNumber
+                 )
+                 values (
+                    :StatementNumber,
+                    :CreatedDate,
+                    :TotalAmt,
+                    :ContractId,
+                    :DueDate,
+                    :BaseAmt,
+                    :CAM,
+                    :PaymentNumber
+                 )';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':StatementNumber', $data['StatementNumber']);
+        $statement->bindValue(':CreatedDate', $data['CreatedDate']);
+        $statement->bindValue(':TotalAmt', $data['TotalAmt']);
+        $statement->bindValue(':ContractId', $data['ContractId']);
+        $statement->bindValue(':DueDate', $data['DueDate']);
+        $statement->bindValue(':BaseAmt', $data['BaseAmt']);
+        $statement->bindValue(':CAM', $data['CAM']);
+        if (!empty($data['PaymentNumber'])) {
+            $statement->bindValue(':PaymentNumber', $data['PaymentNumber']);
+        } else {
+            $statement->bindValue(':PaymentNumber', null, PDO::PARAM_NULL);
+        }
+        $statement->execute();
+        $statement->closeCursor();
+        return true;
     }
     public function get_overdue_statements() {
         $db = Database::getDB();
@@ -227,6 +275,113 @@ class LogStatementsDB {
         $statements = $statement->fetchAll();
         $statement->closeCursor();
         return $statements;
+    }
+    public function get_statements_due_auto_billing() {
+        $db = Database::getDB();
+        $query =    '
+                    with all_payment_methods as (
+                        select 
+                            ls.StatementNumber, 
+                            c.TestContract, 
+                            c.StatementAutoReceive, 
+                            ls.TotalAmt, 
+                            c.ContractType, 
+                            c.NumPaymentsDue, 
+                            c.ContractId, 
+                            u.email, 
+                            c.Name "ContractName", 
+                            ct.Name "CustomerName", 
+                            cast(ls.CreatedDate as date) "CreatedDate",
+                            sc.stripe_customer_id,
+                            sc.StripeCustomerId,
+                            pm.stripe_payment_method_id,
+                            pm.StripePaymentMethodId,
+                            row_number() over(partition by ls.StatementNumber order by pm.UpdatedAt desc) as rownum
+                        from LogStatements ls 
+                        left join Contract c on ls.ContractId = c.ContractId
+                        left join Customer ct on c.CustomerId = ct.CustomerId 
+                        left join users u on ct.userId = u.userId
+                        left join StripeCustomers sc on ct.CustomerId = sc.CustomerId
+                        left join StripePaymentMethods pm on sc.StripeCustomerId = pm.StripeCustomerId
+                        where c.StatementAutoReceive = "false"
+                        and pm.IsEnabled = 1
+                        and ls.DueDate = current_date()
+                        and ls.PaidDate is null
+                        and (c.TestContract is null or c.TestContract = 0)
+                    )
+
+                    select * 
+                    from all_payment_methods
+                    where rownum = 1
+                    '; 
+        $statement = $db->prepare($query);
+        $statement->execute();
+        $statements = $statement->fetchAll();
+        $statement->closeCursor();
+        return $statements;
+    }
+    public function get_statements_due_auto_billing_test() {
+        $db = Database::getDB();
+        $query =    '
+                    with all_payment_methods as (
+                        select 
+                            ls.StatementNumber, 
+                            c.TestContract, 
+                            c.StatementAutoReceive, 
+                            ls.TotalAmt, 
+                            c.ContractType, 
+                            c.NumPaymentsDue, 
+                            c.ContractId, 
+                            u.email, 
+                            c.Name "ContractName", 
+                            ct.Name "CustomerName", 
+                            cast(ls.CreatedDate as date) "CreatedDate",
+                            sc.stripe_customer_id,
+                            sc.StripeCustomerId,
+                            pm.stripe_payment_method_id,
+                            pm.StripePaymentMethodId,
+                            row_number() over(partition by ls.StatementNumber order by pm.UpdatedAt desc) as rownum
+                        from LogStatements ls 
+                        left join Contract c on ls.ContractId = c.ContractId
+                        left join Customer ct on c.CustomerId = ct.CustomerId 
+                        left join users u on ct.userId = u.userId
+                        left join StripeCustomers sc on ct.CustomerId = sc.CustomerId
+                        left join StripePaymentMethods pm on sc.StripeCustomerId = pm.StripeCustomerId
+                        where c.StatementAutoReceive = "false"
+                        and pm.IsEnabled = 1
+                        and ls.PaidDate is null
+                        and c.TestContract = 1
+                        and ct.CustomerId = 4
+                    )
+                    
+                    select * 
+                    from all_payment_methods
+                    where rownum = 1
+                    limit 1
+                    '; 
+        $statement = $db->prepare($query);
+        $statement->execute();
+        $statements = $statement->fetchAll();
+        $statement->closeCursor();
+        return $statements;
+    }
+
+    public function add_stripe_payment_id (
+        int $statement_number,
+        int $StripePaymentId
+    ) {
+        $db = Database::getDB();
+        $query = '
+            update LogStatements
+            set StripePaymentId = :StripePaymentId
+            where StatementNumber = :statement_number
+        ';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':statement_number', $statement_number);
+        $statement->bindValue('StripePaymentId', $StripePaymentId);
+        $statement->execute();
+        $statement->closeCursor();
+        return true;
     }
 }
 

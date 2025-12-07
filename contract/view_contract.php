@@ -7,189 +7,121 @@ if (!isset($_SESSION["logged_in"])) {
 include '../view/header.php';
 ?>
 
-<body onload="load_functions()">
-<script>
-    var contract_type = <?php echo(json_encode($contract_info['ContractType'])); ?>;
-    var statement_auto_receive = <?php echo(json_encode($contract_info['StatementAutoReceive'])); ?>;
-
-    function load_functions() {
-        hide_elements();
-        statement_auto_receive_view();
-    }
-    function hide_elements() {
-        if (contract_type == 'Evergreen') {
-            document.getElementById('accordion').style.visibility = 'visible';
-        } else {
-            document.getElementById('accordion').style.visibility = 'hidden';
-        }
-    }
-    function statement_auto_receive_view() {
-        if (statement_auto_receive == 'false') {
-            document.getElementById("statement_auto_receive").checked = false;
-        } else {
-            document.getElementById("statement_auto_receive").checked = true;
-        }
-    }
-</script>
-
 <main>
-    <br><br>
-    <h5>Basic Information</h5>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Contract Name</th>
-                <th scope="col">Contract Type</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><?php echo $contract_info['Name']; ?></td>
-                <td><?php echo $contract_info['ContractType']; ?></td>
-            </tr>
-        </tbody>
-        <thead>
-            <th scope="col">Customer</th>
-            <th scope="col">Property</th>
-        </thead>
-        <tbody>
-            <td><a href="../customer/index.php?action=view_customer&customer_id=<?php echo $contract_info['CustomerId']; ?>"><?php echo $contract_info['CustomerName']; ?></a></td>
-            <td><?php echo $contract_info['PropertyName']; ?></td>
-        </tbody>
-        <thead>
-            <th scope="col">Company</th>
-            <th scope="col">Statement Auto Receive &nbsp; <small><a href="" data-toggle="modal" data-target="#edit_statementautoreceive_modal">Edit</a></small></th></th>
-        </thead>
-        <tbody>
-            <td><?php echo $contract_info['CompanyName']; ?></td>
-            <td><input type="checkbox" id="statement_auto_receive" disabled></td>        
-        </tbody>
-    </table>
-    <br><br>
-    <h5>Billing Information</h5>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Base Amount (Current Term)</th>
-                <th scope="col">CAM</th>
-            </tr>
-        </thead>
-        <tbody>
-            <td><?php echo $current_term['BaseAmt']; ?></td>
-            <td><?php echo $contract_info['CAM']; ?></td>
-        </tbody>
-        <thead>
-            <tr>
-                <th scope="col">Due Date</th>
-                <th scope="col">Late Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <td><?php echo $contract_info['DueDate']; ?></td>
-            <td><?php echo $contract_info['LateDate']; ?></td>
-        </tbody>
-        <thead>
-            <tr>
-                <th scope="col">Late Fee</th>
-                <th scope="col">Statement Send Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <td><?php echo $contract_info['LateFee']; ?></td>
-            <td><?php echo $contract_info['StatementSendDate']; ?></td>
-        </tbody>
-    </table>
-    <br><br>
-    <h5>Evergreen Contract Information</h5>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Billing Cycle Start</th>
-                <th scope="col">Billing Cycle End</th>
-            </tr>
-        </thead>
-        <tbody>
-            <td><?php echo $contract_info['BillingCycleStart']; ?></td>
-            <td><?php echo $contract_info['BillingCycleEnd']; ?></td>
-        </tbody>
-    </table>
-    <br><br>
-    <h5>Fixed Contract Information</h5>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Outstanding Payments Due</th>
-                <th scope="col">Total Payments Due</th>
-            </tr>
-        </thead>
-        <tbody>
-            <td><?php echo $contract_info['NumPaymentsDue']; ?></td>
-            <td><?php echo $contract_info['TotalPaymentsDue']; ?></td>
-        </tbody>
-    </table>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h4 class="mb-1 d-inline"><?php echo htmlspecialchars($contract_info['Name']); ?></h4>
+            <span class="badge badge-secondary ml-2"><?php echo htmlspecialchars($contract_info['ContractType']); ?></span>
+        </div>
+        <div class="d-flex align-items-center">
+            <a class="btn btn-primary btn-sm mr-2" href=".?action=edit_contract&contract_id=<?php echo $contract_info['ContractId']; ?>">Edit Contract</a>
+            <button class="btn btn-danger btn-sm mr-2" data-toggle="modal" data-target="#confirmDelete">Delete</button>
+            <a href=".?action=view_contracts_list&customer_id=<?php echo $contract_info['CustomerId']; ?>">Back to Contracts</a>
+        </div>
+    </div>
 
-    <div id="accordion">
-        <div class="card">
-            <div class="card-header" id="headingOne">
-                <h5 class="mb-0">
-                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        Contract Terms
-                    </button>
-                </h5>
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Contract ID:</strong> <?php echo $contract_info['ContractId']; ?></p>
+                    <p><strong>Customer:</strong> <a href="../customer/index.php?action=view_customer&customer_id=<?php echo $contract_info['CustomerId']; ?>"><?php echo htmlspecialchars($contract_info['CustomerName']); ?></a></p>
+                    <p><strong>Property ID:</strong> <?php echo htmlspecialchars($contract_info['PropertyId']); ?></p>
+                    <p><strong>Company ID:</strong> <?php echo htmlspecialchars($contract_info['CompanyId']); ?></p>
+                    <p><strong>Base Amount:</strong> <?php echo htmlspecialchars($contract_info['BaseAmt']); ?></p>
+                    <p><strong>CAM:</strong> <?php echo htmlspecialchars($contract_info['CAM']); ?></p>
+                    <p><strong>Statement Auto Receive:</strong> <?php echo ($contract_info['StatementAutoReceive'] === 'true') ? 'Yes' : 'No'; ?></p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Billing Cycle Start:</strong> <?php echo htmlspecialchars($contract_info['BillingCycleStart']); ?></p>
+                    <p><strong>Billing Cycle End:</strong> <?php echo htmlspecialchars($contract_info['BillingCycleEnd']); ?></p>
+                    <p><strong>Due Date:</strong> <?php echo htmlspecialchars($contract_info['DueDate']); ?></p>
+                    <p><strong>Late Date:</strong> <?php echo htmlspecialchars($contract_info['LateDate']); ?></p>
+                    <p><strong>Late Fee:</strong> <?php echo htmlspecialchars($contract_info['LateFee']); ?></p>
+                    <p><strong>Statement Send Date:</strong> <?php echo htmlspecialchars($contract_info['StatementSendDate']); ?></p>
+                    <p><strong>Test Contract:</strong> <?php echo !empty($contract_info['TestContract']) ? 'Yes' : 'No'; ?></p>
+                </div>
             </div>
-            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-                <div class="card-body">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col">Term Start Date</th>
-                                <th scope="col">Term End Date</th>
-                                <th scope="col">Base Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($contract_terms as $contract_term) : ?>
-                            <tr>
-                                <td><?php echo $contract_term['TermStartDate']; ?></td>
-                                <td><?php echo $contract_term['TermEndDate']; ?></td>
-                                <td><?php echo $contract_term['BaseAmt']; ?></td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Num Payments Due:</strong> <?php echo htmlspecialchars($contract_info['NumPaymentsDue']); ?></p>
+                    <p><strong>Total Payments Due:</strong> <?php echo htmlspecialchars($contract_info['TotalPaymentsDue']); ?></p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Stripe Payment Method Id:</strong> <?php echo htmlspecialchars($contract_info['StripePaymentMethodId']); ?></p>
+                    <?php if (!empty($contract_info['BankName'])) : ?>
+                        <p><strong>Payment Method:</strong> <?php echo htmlspecialchars($contract_info['BankName'] . ' ••••' . $contract_info['Last4']); ?></p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- List of Modals -->
-    <div class="modal fade" id="edit_statementautoreceive_modal" tabindex="-1" role="dialog" aria-labelledby="edit_statementautoreceive_modal_label" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="edit_statementautoreceive_modal_label">Statement Auto Receive Setting</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="index.php" method="post">
-                        <input type="hidden" name="action" value="edit_statementautoreceive">
-                        <input type="hidden" name="contract_id" value="<?php echo $contract_info['ContractId']; ?>">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="new_statementautoreceive" id="new_statementautoreceive">
-                            <label class="form-check-label" for="new_statementautoreceive">Statement Auto Receive</label>
-                        </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" value="Save">
-                    </form>
-                </div>
+    <?php if (!empty($current_term)) : ?>
+    <div class="card mb-3">
+        <div class="card-header">Current Term</div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4"><strong>Term Start:</strong> <?php echo htmlspecialchars($current_term['TermStartDate']); ?></div>
+                <div class="col-md-4"><strong>Term End:</strong> <?php echo htmlspecialchars($current_term['TermEndDate']); ?></div>
+                <div class="col-md-4"><strong>Base Amount:</strong> <?php echo htmlspecialchars($current_term['BaseAmt']); ?></div>
             </div>
         </div>
     </div>
+    <?php endif; ?>
 
+    <div class="card">
+        <div class="card-header">Contract Terms</div>
+        <div class="card-body">
+            <?php if (empty($contract_terms)) : ?>
+                <p class="mb-0 text-muted">No terms recorded.</p>
+            <?php else : ?>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Term Start Date</th>
+                        <th scope="col">Term End Date</th>
+                        <th scope="col">Base Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($contract_terms as $contract_term) : ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($contract_term['TermStartDate']); ?></td>
+                        <td><?php echo htmlspecialchars($contract_term['TermEndDate']); ?></td>
+                        <td><?php echo htmlspecialchars($contract_term['BaseAmt']); ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?php endif; ?>
+        </div>
+    </div>
 </main>
+
+<form id="deleteContractForm" method="post" action="index.php">
+    <input type="hidden" name="action" value="delete_contract">
+    <input type="hidden" name="contract_id" value="<?php echo $contract_info['ContractId']; ?>">
+</form>
+
+<div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteLabel">Delete Contract</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete <?php echo htmlspecialchars($contract_info['Name']); ?>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="document.getElementById('deleteContractForm').submit();">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <?php include '../view/footer.php'; ?>

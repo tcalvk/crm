@@ -2,13 +2,17 @@
 class ContractTermDB {
     public function get_current_term($contract_id) {
         $db = Database::getDB();
-        $query = 'select case when ct.BaseAmt is null then "na" else ct.BaseAmt end "BaseAmt"
-        from Contract c 
-        left join ContractTerm ct on c.ContractId = ct.ContractId
-        where ((CURRENT_DATE >= ct.TermStartDate and CURRENT_DATE <= ct.TermEndDate) or ct.TermStartDate is null)
-        and c.ContractId = :ContractId';
+        $query = 'select 
+                    ct.TermStartDate,
+                    ct.TermEndDate,
+                    case when ct.BaseAmt is null then "na" else ct.BaseAmt end "BaseAmt"
+                  from ContractTerm ct
+                  where ct.ContractId = :ContractId
+                    and ((CURRENT_DATE >= ct.TermStartDate and CURRENT_DATE <= ct.TermEndDate) or ct.TermStartDate is null)
+                  order by ct.TermStartDate desc
+                  limit 1';
         $statement = $db->prepare($query);
-        $statement->bindValue(':ContractId', $contract_id);
+        $statement->bindValue(':ContractId', $contract_id, PDO::PARAM_INT);
         $statement->execute();
         $current_term = $statement->fetch();
         $statement->closeCursor();
