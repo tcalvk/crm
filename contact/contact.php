@@ -27,6 +27,7 @@ include '../view/header.php';
                     <p><strong>Last Name:</strong> <?php echo htmlspecialchars($contact['LastName']); ?></p>
                     <p><strong>Phone:</strong> <?php echo htmlspecialchars($contact['Phone']); ?></p>
                     <p><strong>Email:</strong> <?php echo htmlspecialchars($contact['Email']); ?></p>
+                    <p><strong>Is Primary:</strong> <?php echo !empty($contact['IsPrimary']) ? 'Yes' : 'No'; ?></p>
                 </div>
                 <div class="col-md-6">
                     <p><strong>Address 1:</strong> <?php echo htmlspecialchars($contact['Address1']); ?></p>

@@ -12,12 +12,22 @@ class BillingService
 {
     private static function getStripeSecretKey(): string
     {
-        $configPath = __DIR__ . '/../config/stripe_config.php';
-        if (!file_exists($configPath)) {
-            $configPath = __DIR__ . '/../config/stripe_dev.php';
+        $configCandidates = [
+            __DIR__ . '/../config/stripe_config.php',
+            __DIR__ . '/../config/stripe_dev.php',
+        ];
+
+        foreach ($configCandidates as $configPath) {
+            if (file_exists($configPath)) {
+                $config = require $configPath;
+                if (!isset($config['stripe_secret_key']) || empty($config['stripe_secret_key'])) {
+                    throw new \Exception('Stripe config missing stripe_secret_key in ' . basename($configPath));
+                }
+                return $config['stripe_secret_key'];
+            }
         }
-        $config = require $configPath;
-        return $config['stripe_secret_key'];
+
+        throw new \Exception('Stripe config file not found (expected stripe_config.php or stripe_dev.php).');
     }
 
     private static function getInviteHashKey(): string

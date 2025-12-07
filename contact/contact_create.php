@@ -84,6 +84,10 @@ include '../view/header.php';
             <input type="checkbox" class="form-check-input" id="ReceiveStatements" name="ReceiveStatements" value="1" <?php if (!empty($contact['ReceiveStatements'])) echo 'checked'; ?>>
             <label class="form-check-label" for="ReceiveStatements">Receive Statements</label>
         </div>
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="IsPrimary" name="IsPrimary" value="1" <?php if (!empty($contact['IsPrimary'])) echo 'checked'; ?>>
+            <label class="form-check-label" for="IsPrimary">Is Primary</label>
+        </div>
 
         <button type="submit" class="btn btn-primary">Create Contact</button>
     </form>
