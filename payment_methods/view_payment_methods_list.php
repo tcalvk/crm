@@ -41,11 +41,32 @@ include '../view/header.php';
     </table>
     <?php endif; ?>
     <div id="inviteStatus" class="mt-3"></div>
+
+    <div class="modal fade" id="confirmInviteModal" tabindex="-1" role="dialog" aria-labelledby="confirmInviteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmInviteModalLabel">Send payment method request</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Request will be sent to primary customer contact. Are you sure you'd like to send?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmSendInviteBtn">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 
 <script>
 (function() {
     const sendBtn = document.getElementById('sendInviteBtn');
+    const confirmBtn = document.getElementById('confirmSendInviteBtn');
     const statusEl = document.getElementById('inviteStatus');
 
     function setStatus(message, isError = false) {
@@ -53,9 +74,10 @@ include '../view/header.php';
         statusEl.className = isError ? 'text-danger' : 'text-success';
     }
 
-    sendBtn.addEventListener('click', async () => {
+    async function sendInvite() {
         setStatus('Sending request...');
         sendBtn.disabled = true;
+        confirmBtn.disabled = true;
         try {
             const formData = new FormData();
             formData.append('customer_id', '<?php echo $customer_id; ?>');
@@ -80,7 +102,7 @@ include '../view/header.php';
 
             if (data.inviteCode) {
                 setStatus('Invite created. Code: ' + data.inviteCode);
-                alert('Invite code for customer: ' + data.inviteCode + '\\n\\nSend this to the customer with the billing link.');
+                alert('Invite code for customer: ' + data.inviteCode + '\\n\\nCode sent to the customer with the billing link.');
             } else {
                 setStatus('Invite created.');
             }
@@ -90,7 +112,18 @@ include '../view/header.php';
             alert(err.message || 'Failed to send invite');
         } finally {
             sendBtn.disabled = false;
+            confirmBtn.disabled = false;
         }
+    }
+
+    sendBtn.addEventListener('click', () => {
+        if (sendBtn.disabled) return;
+        $('#confirmInviteModal').modal('show');
+    });
+
+    confirmBtn.addEventListener('click', () => {
+        $('#confirmInviteModal').modal('hide');
+        sendInvite();
     });
 })();
 </script>
