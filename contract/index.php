@@ -38,6 +38,15 @@ function optional_int_input($key) {
     return $value === '' ? null : $value;
 }
 
+function optional_decimal_input($key) {
+    $value = filter_input(INPUT_POST, $key, FILTER_DEFAULT);
+    if ($value === null) {
+        return null;
+    }
+    $value = trim((string) $value);
+    return $value === '' ? null : $value;
+}
+
 function collect_contract_term_payload() {
     return [
         'TermStartDate' => trim((string) filter_input(INPUT_POST, 'TermStartDate')),
@@ -85,14 +94,14 @@ function collect_contract_payload($customer_id_override = null) {
         'Name' => trim((string) filter_input(INPUT_POST, 'Name')),
         'PropertyId' => optional_int_input('PropertyId'),
         'CustomerId' => $customer_id ?? 0,
-        'CompanyId' => filter_input(INPUT_POST, 'CompanyId', FILTER_VALIDATE_INT) ?? 0,
-        'BaseAmt' => trim((string) filter_input(INPUT_POST, 'BaseAmt')),
-        'CAM' => trim((string) filter_input(INPUT_POST, 'CAM')),
+        'CompanyId' => optional_int_input('CompanyId'),
+        'BaseAmt' => optional_decimal_input('BaseAmt'),
+        'CAM' => optional_decimal_input('CAM'),
         'BillingCycleStart' => filter_input(INPUT_POST, 'BillingCycleStart', FILTER_VALIDATE_INT) ?? 0,
         'BillingCycleEnd' => trim((string) filter_input(INPUT_POST, 'BillingCycleEnd')),
         'DueDate' => trim((string) filter_input(INPUT_POST, 'DueDate')),
         'LateDate' => optional_int_input('LateDate'),
-        'LateFee' => trim((string) filter_input(INPUT_POST, 'LateFee')),
+        'LateFee' => optional_decimal_input('LateFee'),
         'StatementSendDate' => filter_input(INPUT_POST, 'StatementSendDate', FILTER_VALIDATE_INT) ?? 0,
         'NumPaymentsDue' => optional_int_input('NumPaymentsDue'),
         'TotalPaymentsDue' => optional_int_input('TotalPaymentsDue'),
@@ -108,6 +117,9 @@ function validate_contract_payload($data) {
     if ($data['Name'] === '') {
         $errors[] = 'Name is required.';
     }
+    if ($data['BaseAmt'] === null || $data['BaseAmt'] === '') {
+        $errors[] = 'Base amount is required.';
+    }
     if ($data['CustomerId'] <= 0) {
         $errors[] = 'Customer is required.';
     }
@@ -120,7 +132,7 @@ function validate_contract_payload($data) {
         }
     }
     foreach (['BaseAmt', 'CAM', 'LateFee'] as $numField) {
-        if ($data[$numField] !== '' && !is_numeric($data[$numField])) {
+        if ($data[$numField] !== null && $data[$numField] !== '' && !is_numeric($data[$numField])) {
             $errors[] = ucfirst($numField) . ' must be numeric.';
         }
     }
@@ -176,7 +188,7 @@ if ($action == 'view_contract') {
         'Name' => '',
         'PropertyId' => 0,
         'CustomerId' => $customer_id,
-        'CompanyId' => 0,
+        'CompanyId' => null,
         'BaseAmt' => '',
         'CAM' => '',
         'BillingCycleStart' => '',
