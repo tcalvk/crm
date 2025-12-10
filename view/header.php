@@ -39,6 +39,9 @@
                         <a class="nav-link" href="/customer/index.php?action=list_customers">Customers</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="/property/index.php?action=list_properties">Properties</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="/user_settings/index.php?action=view_user_settings">Settings</a>
                     </li>
                     <li class="nav-link disabled">

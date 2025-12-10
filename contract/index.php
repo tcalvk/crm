@@ -29,11 +29,61 @@ function user_can_access_customer($user_info, $customer_info) {
     return $user_info['superuser'] == 1 || $user_info['userId'] == $customer_info['userId'];
 }
 
+function optional_int_input($key) {
+    $value = filter_input(INPUT_POST, $key, FILTER_DEFAULT);
+    if ($value === null) {
+        return null;
+    }
+    $value = trim((string) $value);
+    return $value === '' ? null : $value;
+}
+
+function collect_contract_term_payload() {
+    return [
+        'TermStartDate' => trim((string) filter_input(INPUT_POST, 'TermStartDate')),
+        'TermEndDate' => trim((string) filter_input(INPUT_POST, 'TermEndDate')),
+        'BaseAmt' => trim((string) filter_input(INPUT_POST, 'BaseAmt')),
+    ];
+}
+
+function validate_contract_term_payload($data) {
+    $errors = [];
+    $is_valid_date = function ($value) {
+        if ($value === '') {
+            return false;
+        }
+        $date = DateTime::createFromFormat('Y-m-d', $value);
+        return $date && $date->format('Y-m-d') === $value;
+    };
+
+    foreach (['TermStartDate' => 'Term start date', 'TermEndDate' => 'Term end date'] as $field => $label) {
+        if ($data[$field] === '') {
+            $errors[] = $label . ' is required.';
+        } else if (!$is_valid_date($data[$field])) {
+            $errors[] = $label . ' must be in YYYY-MM-DD format.';
+        }
+    }
+
+    if ($data['BaseAmt'] === '') {
+        $errors[] = 'Base amount is required.';
+    } else if (!is_numeric($data['BaseAmt'])) {
+        $errors[] = 'Base amount must be numeric.';
+    }
+
+    if (empty($errors) && $is_valid_date($data['TermStartDate']) && $is_valid_date($data['TermEndDate'])) {
+        if (strtotime($data['TermEndDate']) < strtotime($data['TermStartDate'])) {
+            $errors[] = 'Term end date must be on or after the start date.';
+        }
+    }
+
+    return $errors;
+}
+
 function collect_contract_payload($customer_id_override = null) {
     $customer_id = $customer_id_override ?? filter_input(INPUT_POST, 'CustomerId', FILTER_VALIDATE_INT);
     return [
         'Name' => trim((string) filter_input(INPUT_POST, 'Name')),
-        'PropertyId' => filter_input(INPUT_POST, 'PropertyId', FILTER_VALIDATE_INT) ?? 0,
+        'PropertyId' => optional_int_input('PropertyId'),
         'CustomerId' => $customer_id ?? 0,
         'CompanyId' => filter_input(INPUT_POST, 'CompanyId', FILTER_VALIDATE_INT) ?? 0,
         'BaseAmt' => trim((string) filter_input(INPUT_POST, 'BaseAmt')),
@@ -41,11 +91,11 @@ function collect_contract_payload($customer_id_override = null) {
         'BillingCycleStart' => filter_input(INPUT_POST, 'BillingCycleStart', FILTER_VALIDATE_INT) ?? 0,
         'BillingCycleEnd' => trim((string) filter_input(INPUT_POST, 'BillingCycleEnd')),
         'DueDate' => trim((string) filter_input(INPUT_POST, 'DueDate')),
-        'LateDate' => filter_input(INPUT_POST, 'LateDate', FILTER_VALIDATE_INT) ?? 0,
+        'LateDate' => optional_int_input('LateDate'),
         'LateFee' => trim((string) filter_input(INPUT_POST, 'LateFee')),
         'StatementSendDate' => filter_input(INPUT_POST, 'StatementSendDate', FILTER_VALIDATE_INT) ?? 0,
-        'NumPaymentsDue' => filter_input(INPUT_POST, 'NumPaymentsDue', FILTER_VALIDATE_INT) ?? 0,
-        'TotalPaymentsDue' => filter_input(INPUT_POST, 'TotalPaymentsDue', FILTER_VALIDATE_INT) ?? 0,
+        'NumPaymentsDue' => optional_int_input('NumPaymentsDue'),
+        'TotalPaymentsDue' => optional_int_input('TotalPaymentsDue'),
         'ContractType' => trim((string) filter_input(INPUT_POST, 'ContractType')),
         'TestContract' => isset($_POST['TestContract']) ? 1 : 0,
         'StatementAutoReceive' => isset($_POST['StatementAutoReceive']) ? 'true' : 'false',
@@ -94,6 +144,8 @@ if ($action == 'view_contract') {
     $contract_terms = $contract_term_db->get_all_terms($contract_id);
     $customer_id = $contract_info['CustomerId'];
     $customer_payment_methods = $payment_methods_db->get_payment_methods($customer_id);
+    $term_errors = [];
+    $term_form_data = ['TermStartDate' => '', 'TermEndDate' => '', 'BaseAmt' => ''];
     if (user_can_access_customer($user_info, $contract_info)) {
         include 'view_contract.php';
     } else {
@@ -235,6 +287,36 @@ if ($action == 'view_contract') {
     if ($payment_method_id > 0) {
         $contracts_db->update_statementautoreceive($contract_id, 'false');
     }
+    header('Location: .?action=view_contract&contract_id=' . $contract_id);
+} else if ($action == 'add_contract_term') {
+    $contract_id = filter_input(INPUT_POST, 'contract_id', FILTER_VALIDATE_INT);
+    $contract_info = $contracts_db->get_contract_info($contract_id);
+    if (!$contract_info || !user_can_access_customer($user_info, $contract_info)) {
+        include '../view/record_access_error.php';
+        exit;
+    }
+    $term_payload = collect_contract_term_payload();
+    $term_errors = validate_contract_term_payload($term_payload);
+    if (!empty($term_errors)) {
+        $current_term = $contract_term_db->get_current_term($contract_id);
+        $contract_terms = $contract_term_db->get_all_terms($contract_id);
+        $term_form_data = $term_payload;
+        $customer_payment_methods = $payment_methods_db->get_payment_methods($contract_info['CustomerId']);
+        include 'view_contract.php';
+        exit;
+    }
+    $contract_term_db->create_term($contract_id, $term_payload['TermStartDate'], $term_payload['TermEndDate'], $term_payload['BaseAmt']);
+    header('Location: .?action=view_contract&contract_id=' . $contract_id);
+} else if ($action == 'delete_contract_term') {
+    $contract_id = filter_input(INPUT_POST, 'contract_id', FILTER_VALIDATE_INT);
+    $contract_term_id = filter_input(INPUT_POST, 'contract_term_id', FILTER_VALIDATE_INT);
+    $contract_info = $contracts_db->get_contract_info($contract_id);
+    $term_info = $contract_term_db->get_term($contract_term_id);
+    if (!$contract_info || !$term_info || $term_info['ContractId'] != $contract_id || !user_can_access_customer($user_info, $contract_info)) {
+        include '../view/record_access_error.php';
+        exit;
+    }
+    $contract_term_db->delete_term($contract_term_id, $contract_id);
     header('Location: .?action=view_contract&contract_id=' . $contract_id);
 }
 
