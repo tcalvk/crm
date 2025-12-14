@@ -26,15 +26,42 @@ include '../view/header.php';
                 <th scope="col">Last 4</th>
                 <th scope="col">Account Type</th>
                 <th scope="col">Created</th>
+                <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
         <?php foreach ($payment_methods as $payment_method) : ?>
             <tr>
-                <td><?php echo $payment_method['BankName']; ?></td>
+                <td>
+                    <div><?php echo $payment_method['BankName']; ?></div>
+                    <div class="small">
+                        <?php if (!empty($payment_method['IsEnabled'])) : ?>
+                            <span class="badge badge-success">Enabled</span>
+                        <?php else : ?>
+                            <span class="badge badge-warning text-dark">Disabled</span>
+                        <?php endif; ?>
+                    </div>
+                </td>
                 <td><?php echo $payment_method['Last4']; ?></td>
                 <td><?php echo $payment_method['AccountType']; ?></td>
                 <td><?php echo $payment_method['CreatedAt']; ?></td>
+                <td>
+                    <form method="post" action="index.php" class="d-inline">
+                        <input type="hidden" name="action" value="toggle_payment_method">
+                        <input type="hidden" name="customer_id" value="<?php echo $customer_id; ?>">
+                        <input type="hidden" name="payment_method_id" value="<?php echo $payment_method['StripePaymentMethodId']; ?>">
+                        <input type="hidden" name="enable" value="<?php echo $payment_method['IsEnabled'] ? 0 : 1; ?>">
+                        <button type="submit" class="btn btn-sm <?php echo $payment_method['IsEnabled'] ? 'btn-warning' : 'btn-success'; ?>">
+                            <?php echo $payment_method['IsEnabled'] ? 'Disable' : 'Enable'; ?>
+                        </button>
+                    </form>
+                    <form method="post" action="index.php" class="d-inline delete-form" data-bank="<?php echo htmlspecialchars($payment_method['BankName']); ?>" data-last4="<?php echo htmlspecialchars($payment_method['Last4']); ?>">
+                        <input type="hidden" name="action" value="delete_payment_method">
+                        <input type="hidden" name="customer_id" value="<?php echo $customer_id; ?>">
+                        <input type="hidden" name="payment_method_id" value="<?php echo $payment_method['StripePaymentMethodId']; ?>">
+                        <button type="submit" class="btn btn-sm btn-danger ml-1">Delete</button>
+                    </form>
+                </td>
             </tr>
         <?php endforeach; ?>
         </tbody>
@@ -68,6 +95,7 @@ include '../view/header.php';
     const sendBtn = document.getElementById('sendInviteBtn');
     const confirmBtn = document.getElementById('confirmSendInviteBtn');
     const statusEl = document.getElementById('inviteStatus');
+    const deleteForms = document.querySelectorAll('.delete-form');
 
     function setStatus(message, isError = false) {
         statusEl.textContent = message;
@@ -124,6 +152,19 @@ include '../view/header.php';
     confirmBtn.addEventListener('click', () => {
         $('#confirmInviteModal').modal('hide');
         sendInvite();
+    });
+
+    deleteForms.forEach((form) => {
+        form.addEventListener('submit', (e) => {
+            const bank = form.dataset.bank || 'payment method';
+            const last4 = form.dataset.last4 ? ` ending in ${form.dataset.last4}` : '';
+            const confirmation = prompt(`Type delete to remove ${bank}${last4}. This cannot be undone.`);
+            if (!confirmation || confirmation.toLowerCase() !== 'delete') {
+                e.preventDefault();
+                return false;
+            }
+            return true;
+        });
     });
 })();
 </script>
