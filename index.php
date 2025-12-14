@@ -10,7 +10,7 @@ $action = filter_input(INPUT_POST, 'action');
     if ($action == null) {
         $action = filter_input(INPUT_GET, 'action');
         if ($action == null) {
-            $action = 'login';
+            $action = 'landing';
         }
     }
     
@@ -160,9 +160,7 @@ if (!isset($_SESSION["logged_in"])) {
                 header("Location: login.php?message=Email verified. Please login.");
             }
         }
-    }
-} else {
-    if ($action == 'logout') {
+    } else if ($action == 'logout') {
         $_SESSION = array();
         session_destroy();
         $name = session_name();
@@ -174,8 +172,9 @@ if (!isset($_SESSION["logged_in"])) {
         $httponly = $params['httponly'];
         setcookie($name, '', $expire, $path, $domain, $secure, $httponly);
         header("Location: login.php");
-    } else {
-        header("Location: homepage.php");
+    } else if ($action == 'landing') {
+        header("Location: landing/");
     }
-}
+} 
+
 ?>
