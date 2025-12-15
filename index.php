@@ -3,8 +3,10 @@ session_start();
 require 'model/database.php';
 require 'model/users_db.php';
 require 'model/email_server.php';
+require 'model/user_invites_db.php';
 $users_db = new UsersDB;
 $email_server = new EmailServer; 
+$user_invites_db = new UserInvitesDB;
 
 $action = filter_input(INPUT_POST, 'action');
     if ($action == null) {
@@ -32,7 +34,13 @@ if (!isset($_SESSION["logged_in"])) {
             }
         }      
     } else if ($action == 'signup') {
-        include 'signup.php';
+        $invite_code = filter_input(INPUT_GET, 'invite_code');
+        $invite = $user_invites_db->get_pending_invite_by_code($invite_code);
+        if ($invite == false || $invite == null) {
+            header("Location: login.php?message=Invite Code invalid. Please contact sales.");
+        } else {
+            include 'signup.php';
+        }
     } else if ($action == 'login') {
         include 'login.php';
     } else if ($action == 'check_signup') {
@@ -40,6 +48,12 @@ if (!isset($_SESSION["logged_in"])) {
         $last_name = filter_input(INPUT_POST, 'last_name');
         $email = filter_input(INPUT_POST, 'email');
         $password = filter_input(INPUT_POST, 'password');
+        $invite_code = filter_input(INPUT_POST, 'invite_code');
+        $invite = $user_invites_db->get_pending_invite_by_code($invite_code);
+        if ($invite == false || $invite == null) {
+            header("Location: login.php?message=Invite Code invalid. Please contact sales.");
+            exit;
+        }
         // validate the email address for @ sign 
         if (str_contains($email, '@')) {
             // validate the email address for '.'
@@ -52,8 +66,8 @@ if (!isset($_SESSION["logged_in"])) {
                     // save new user to db
                     $create_user = $users_db->create_user($first_name, $last_name, $email, $password);
                     if ($create_user == true) {
-                        //header("Location: login.php?message=User account created. Please login.");
-                        include('verify_email.php');
+                        $user_invites_db->mark_invite_accepted($invite_code);
+                        header("Location: login.php?message=User Created. Please login");
                     } else {
                         header("Location: signup.php?message=Sign up error. Please try again.");
                     }       

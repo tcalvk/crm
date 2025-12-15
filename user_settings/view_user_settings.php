@@ -5,62 +5,73 @@ if (!isset($_SESSION["logged_in"])) {
 }
 
 include '../view/header.php';
-?>
-<body onload="statement_overdue_checkbox()">
-<script>
-    var statement_overdue_notification = <?php echo(json_encode($user_settings['StatementOverdueNotification'])); ?>;
-    function statement_overdue_checkbox() {
-        if (statement_overdue_notification == 'false') {
-            document.getElementById("statement_overdue_notification").checked = false;
-        } else {
-            document.getElementById("statement_overdue_notification").checked = true;
-        }
-    }
-</script>
 
-<main>
-    <br><br>
-    <h5>User Information</h5>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">First Name &nbsp; <small><a href="" data-toggle="modal" data-target="#edit_firstname_modal">Edit</a></small></th>
-                <th scope="col">Last Name &nbsp; <small><a href="" data-toggle="modal" data-target="#edit_lastname_modal">Edit</a></small></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><?php echo $user_info['firstname']; ?></td>
-                <td><?php echo $user_info['lastname']; ?></td> 
-            </tr>
-        </tbody>
-    </table>
-    <br><br>
-    <h5>Notification Settings</h5>
-    <i class="fa-solid fa-circle-info myDIV"></i>
-    <div class="hide">
-        <small><em>
-            <ul>
-                <li>When checked, the statement overdue notification setting allows you to receive email notifications when any of your statements are overdue</li>
-                <li>The overdue notification days settings specifies how many overdue days are required before a notification to you is generated</li>
-                <li>If no number of days is specified in this setting, then no notification can be generated, even if the overdue notification is checked</li>
-            </ul>
-        </small></em>
+$statement_overdue_enabled = $user_settings['StatementOverdueNotification'] === 'true';
+?>
+
+<main class="mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h4 class="mb-1">User Settings</h4>
+            <small class="text-muted">Manage your profile details and notifications.</small>
+        </div>
+        <div class="d-flex align-items-center">
+            <?php if (!empty($user_info['superuser']) && $user_info['superuser'] == 1) : ?>
+                <a class="btn btn-secondary btn-sm mr-2" href="/admin/index.php?action=view_admin_settings">Admin</a>
+            <?php endif; ?>
+        </div>
     </div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Statement Overdue Notification &nbsp; <small><a href="" data-toggle="modal" data-target="#edit_statement_overdue_notification_modal">Edit</a></small></th>
-                <th>Statement Overdue Notification Days &nbsp; <small><a href="" data-toggle="modal" data-target="#edit_statement_overdue_notification_days_modal">Edit</small></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><input type="checkbox" id="statement_overdue_notification" disabled></td>
-                <td><?php echo $user_settings['StatementOverdueNotificationDays']; ?></td>
-            </tr>
-        </tbody>
-    </table>
+
+    <div class="card mb-4">
+        <div class="card-header">User Information</div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <p class="text-muted text-uppercase small mb-1">First Name</p>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <span><?php echo htmlspecialchars($user_info['firstname']); ?></span>
+                        <a href="#" data-toggle="modal" data-target="#edit_firstname_modal">Edit</a>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <p class="text-muted text-uppercase small mb-1">Last Name</p>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <span><?php echo htmlspecialchars($user_info['lastname']); ?></span>
+                        <a href="#" data-toggle="modal" data-target="#edit_lastname_modal">Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">Notification Settings</div>
+        <div class="card-body">
+            <div class="alert alert-info small">
+                <ul class="mb-0">
+                    <li>Enable overdue notifications to get an email when a statement goes past due.</li>
+                    <li>Set the number of days overdue before the notification is sent.</li>
+                    <li>If no number of days is set, no notification will be generated.</li>
+                </ul>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-6 mb-3">
+                    <p class="text-muted text-uppercase small mb-1">Statement Overdue Notification</p>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <input type="checkbox" id="statement_overdue_notification" disabled <?php echo $statement_overdue_enabled ? 'checked' : ''; ?>>
+                        <a href="#" data-toggle="modal" data-target="#edit_statement_overdue_notification_modal">Edit</a>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <p class="text-muted text-uppercase small mb-1">Notification Days</p>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <span><?php echo htmlspecialchars($user_settings['StatementOverdueNotificationDays']); ?></span>
+                        <a href="#" data-toggle="modal" data-target="#edit_statement_overdue_notification_days_modal">Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!---->
     <!---->

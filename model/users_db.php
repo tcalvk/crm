@@ -175,6 +175,92 @@ class UsersDB {
         $statement->closeCursor();
         return true;
     }
+
+    public function get_all_users() {
+        $db = Database::getDB();
+        $query = 'select * from users';
+        $statement = $db->prepare($query);
+        $statement->execute();
+        $rows = $statement->fetchAll();
+        $statement->closeCursor();
+        return $rows;
+    }
+
+    public function get_users_paginated($limit, $offset) {
+        $db = Database::getDB();
+        $query = 'select * from users limit :limit offset :offset';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $statement->execute();
+        $rows = $statement->fetchAll();
+        $statement->closeCursor();
+        return $rows;
+    }
+
+    public function get_user_count() {
+        $db = Database::getDB();
+        $query = 'select count(*) as count from users';
+        $statement = $db->prepare($query);
+        $statement->execute();
+        $row = $statement->fetch();
+        $statement->closeCursor();
+        return isset($row['count']) ? (int)$row['count'] : 0;
+    }
+
+    public function get_users_paginated_search($limit, $offset, $search) {
+        $db = Database::getDB();
+        $query = 'select * from users 
+                  where firstname like :search
+                     or lastname like :search
+                     or email like :search
+                  limit :limit offset :offset';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':search', '%' . $search . '%');
+        $statement->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $statement->execute();
+        $rows = $statement->fetchAll();
+        $statement->closeCursor();
+        return $rows;
+    }
+
+    public function get_user_count_search($search) {
+        $db = Database::getDB();
+        $query = 'select count(*) as count from users 
+                  where firstname like :search
+                     or lastname like :search
+                     or email like :search';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':search', '%' . $search . '%');
+        $statement->execute();
+        $row = $statement->fetch();
+        $statement->closeCursor();
+        return isset($row['count']) ? (int)$row['count'] : 0;
+    }
+
+    public function update_superuser_status($user_id, $superuser_value) {
+        $db = Database::getDB();
+        $query = 'update users
+                 set superuser = :superuser
+                 where userId = :userId';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':superuser', $superuser_value);
+        $statement->bindValue(':userId', $user_id);
+        $statement->execute();
+        $statement->closeCursor();
+        return true;
+    }
+
+    public function delete_user($user_id) {
+        $db = Database::getDB();
+        $query = 'delete from users where userId = :userId';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':userId', $user_id);
+        $statement->execute();
+        $statement->closeCursor();
+        return true;
+    }
 }
 
 ?>
