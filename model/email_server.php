@@ -5,9 +5,10 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 
-require 'PHPMailer/src/Exception.php';
-require 'PHPMailer/src/PHPMailer.php';
-require 'PHPMailer/src/SMTP.php';
+$phpmailer_base = __DIR__ . '/../PHPMailer/src/';
+require $phpmailer_base . 'Exception.php';
+require $phpmailer_base . 'PHPMailer.php';
+require $phpmailer_base . 'SMTP.php';
 
 
 class EmailServer {
@@ -186,6 +187,89 @@ HTML;
         ];
         $mail->Body    = strtr($body, $safe_replacements);
         $mail->AltBody = strtr('Use the access code {Access Code} to connect your bank account at {Connect URL}.', $safe_replacements);
+        $mail->send();
+        return true;
+    }
+    public function send_user_invite($email, $invite_code, $link, $email_password) {
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'corsaire.tech@gmail.com';
+        $mail->Password   = $email_password;
+        $mail->SMTPSecure = 'tls';
+        $mail->Port       = 587;
+        $mail->SMTPDebug  = 0;
+        $mail->setFrom('corsaire.tech@gmail.com', 'Corsaire CRM');
+        $mail->addAddress($email);
+        $mail->isHTML(true);
+        $mail->Subject = 'You have been invited to Corsaire CRM';
+
+        $safe_replacements = [
+            '{Invite Code}' => htmlspecialchars($invite_code, ENT_QUOTES, 'UTF-8'),
+            '{Invite URL}'  => htmlspecialchars($link, ENT_QUOTES, 'UTF-8'),
+        ];
+
+        $body = <<<HTML
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Corsaire CRM Invite</title>
+  </head>
+  <body style="margin:0; padding:0; background-color:#f5f5f5;">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#f5f5f5; padding:24px 0;">
+      <tr>
+        <td align="center">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:600px; background-color:#ffffff; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.06);">
+            <tr>
+              <td style="padding:32px 24px 16px 24px; text-align:center; font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color:#111827;">
+                <h1 style="margin:0 0 16px 0; font-size:22px; font-weight:600; line-height:1.3;">
+                  You're invited to CorsaireCRM
+                </h1>
+                <p style="margin:0 0 24px 0; font-size:15px; line-height:1.6; color:#4b5563;">
+                  You've been invited to create a CorsaireCRM account. Please copy the code and enter it at the link below:
+                </p>
+                <p style="margin:0; font-size:14px; color:#4b5563;">
+                  Invite code
+                </p>
+                <p style="margin:4px 0 24px 0; font-size:26px; font-weight:600; letter-spacing:2px; color:#111827;">
+                  {Invite Code}
+                </p>
+                <div style="margin:16px 0 12px 0; font-size:14px; color:#4b5563; text-align:center;">
+                  <div style="font-weight:600; margin-bottom:8px;">Steps to get started:</div>
+                  <ol style="display:inline-block; text-align:left; margin:0 auto 16px auto; padding-left:18px; color:#4b5563; font-size:14px; line-height:1.5;">
+                    <li>Click "Sign Up" below.</li>
+                    <li>Click Login, then Sign Up with Code.</li>
+                    <li>Enter the code above.</li>
+                  </ol>
+                </div>
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto 16px auto;">
+                  <tr>
+                    <td align="center" bgcolor="#2563eb" style="border-radius:6px;">
+                      <a href="{Invite URL}"
+                         style="display:inline-block; padding:12px 28px; font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:15px; font-weight:600; text-decoration:none; color:#ffffff; border-radius:6px;">
+                        Sign Up
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+                <p style="margin:8px 0 0 0; font-size:12px; color:#9ca3af;">
+                  If the button doesn't work, copy and paste this link into your browser:<br />
+                  <span style="word-break:break-all;">{Invite URL}</span>
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
+HTML;
+
+        $mail->Body    = strtr($body, $safe_replacements);
+        $mail->AltBody = strtr("You've been invited to create a CorsaireCRM account.\nInvite code: {Invite Code}\nVisit: {Invite URL}", $safe_replacements);
         $mail->send();
         return true;
     }

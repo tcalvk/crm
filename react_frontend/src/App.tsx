@@ -3,9 +3,16 @@ import { Hero } from './components/Hero';
 import { Features } from './components/Features';
 import { CallToAction } from './components/CallToAction';
 import { LoginModal } from './components/LoginModal';
+import { Menu, X } from 'lucide-react';
 
 export default function App() {
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Set page title
+  if (typeof document !== 'undefined') {
+    document.title = 'CorsaireCRM';
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -18,7 +25,9 @@ export default function App() {
             </div>
             <span className="text-gray-900">CorsaireCRM</span>
           </div>
-          <div className="flex items-center gap-6">
+          
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center gap-6">
             <a href="#features" className="text-gray-600 hover:text-gray-900 transition-colors">
               Features
             </a>
@@ -32,7 +41,46 @@ export default function App() {
               Login
             </button>
           </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden text-gray-700"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </nav>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-white border-t border-gray-200">
+            <div className="container mx-auto px-6 py-4 flex flex-col space-y-4">
+              <a
+                href="#features"
+                className="text-gray-600 hover:text-gray-900 transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Features
+              </a>
+              <a
+                href="#pricing"
+                className="text-gray-600 hover:text-gray-900 transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Pricing
+              </a>
+              <button
+                onClick={() => {
+                  setShowLoginModal(true);
+                  setMobileMenuOpen(false);
+                }}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-left"
+              >
+                Login
+              </button>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Main Content */}

@@ -526,6 +526,10 @@
     display: grid;
   }
 
+  .hidden {
+    display: none;
+  }
+
   .inline-block {
     display: inline-block;
   }
@@ -865,6 +869,10 @@
     text-align: center;
   }
 
+  .text-left {
+    text-align: left;
+  }
+
   .align-middle {
     vertical-align: middle;
   }
@@ -1029,6 +1037,18 @@
   @media (width >= 48rem) {
     .md\:row-start-1 {
       grid-row-start: 1;
+    }
+  }
+
+  @media (width >= 48rem) {
+    .md\:flex {
+      display: flex;
+    }
+  }
+
+  @media (width >= 48rem) {
+    .md\:hidden {
+      display: none;
     }
   }
 

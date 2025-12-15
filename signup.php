@@ -1,5 +1,18 @@
 <?php 
 $message = filter_input(INPUT_GET, 'message');
+$invite_code = filter_input(INPUT_GET, 'invite_code');
+if ($invite_code == null || $invite_code == '') {
+    $invite_code = filter_input(INPUT_POST, 'invite_code');
+}
+
+require_once 'model/database.php';
+require_once 'model/user_invites_db.php';
+$user_invites_db = new UserInvitesDB;
+$invite = $user_invites_db->get_pending_invite_by_code($invite_code);
+if ($invite == false || $invite == null) {
+    header("Location: login.php?message=Invite Code invalid. Please contact sales.");
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -20,6 +33,7 @@ $message = filter_input(INPUT_GET, 'message');
             <h3>Sign Up</h3>
             <form action="." method="post" class="needs-validation" novalidate>
                 <input type="hidden" name="action" value="check_signup">
+                <input type="hidden" name="invite_code" value="<?php echo htmlspecialchars($invite_code); ?>">
 
                 <div class="form-group">
                     <label for="first_name">First Name:</label>

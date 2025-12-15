@@ -28,7 +28,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
                         <a class="nav-link" href="/homepage.php">Home <span class="sr-only">(current)</span></a>
                     </li>
@@ -41,13 +41,17 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/property/index.php?action=list_properties">Properties</a>
                     </li>
+                </ul>
+                <ul class="navbar-nav ml-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="/user_settings/index.php?action=view_user_settings">Settings</a>
+                        <a class="nav-link" href="/user_settings/index.php?action=view_user_settings" aria-label="Settings">
+                            <i class="fas fa-cog" aria-hidden="true"></i>
+                        </a>
                     </li>
-                    <li class="nav-link disabled">
-                        <form action="/index.php" method="post">
+                    <li class="nav-item">
+                        <form class="form-inline my-0" action="/index.php" method="post">
                             <input type="hidden" name="action" value="logout">
-                            <input type="submit" value="Logout">
+                            <input class="btn btn-outline-secondary btn-sm" type="submit" value="Logout">
                         </form>
                     </li>
                 </ul>

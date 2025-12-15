@@ -34,8 +34,7 @@ $message = filter_input(INPUT_GET, 'message');
                     </div>
                 </div>
                 <input class="btn btn-primary" type="submit" value="Login">&nbsp; &nbsp;
-                <a href="forgot_password.php">Forgot Password</a><br><br>
-                <a href="signup.php">Sign Up</a>
+                <a href="forgot_password.php">Forgot Password</a>
             </form>
             <br>
             <div>

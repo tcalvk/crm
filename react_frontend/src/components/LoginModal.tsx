@@ -16,8 +16,8 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
   const handleSignupSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle signup with code
-    console.log('Signup with code:', signupCode);
+    // Redirect to signup with invite code
+    window.location.href = `https://corsairetech.com?action=signup&invite_code=${encodeURIComponent(signupCode)}`;
   };
 
   const handleLoginSubmit = (e: React.FormEvent) => {
@@ -98,13 +98,13 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 Sign Up with Code
               </h2>
               <p className="text-gray-600 mb-6">
-                Enter the signup code provided by your administrator
+                Enter the invite code provided by your administrator
               </p>
 
               <form onSubmit={handleSignupSubmit} className="space-y-4">
                 <div>
                   <label htmlFor="signupCode" className="block text-gray-700 mb-2">
-                    Signup Code
+                    Invite Code
                   </label>
                   <input
                     type="text"
@@ -112,7 +112,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                     value={signupCode}
                     onChange={(e) => setSignupCode(e.target.value)}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter your signup code"
+                    placeholder="Enter your invite code"
                     required
                   />
                 </div>
