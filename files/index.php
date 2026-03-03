@@ -92,6 +92,21 @@ if ($action === null) {
 }
 
 if ($action === 'upload_file') {
+    $upload_user_id = $user_id;
+    if ($is_superuser) {
+        $requested_upload_user_id = filter_input(INPUT_POST, 'upload_user_id', FILTER_VALIDATE_INT);
+        if ($requested_upload_user_id !== null && $requested_upload_user_id !== false && $requested_upload_user_id > 0) {
+            $target_user_info = $users_db->get_user_info((int) $requested_upload_user_id);
+            if ($target_user_info) {
+                $upload_user_id = (int) $requested_upload_user_id;
+            } else {
+                $_SESSION['files_error'] = 'Selected upload user was not found.';
+                header('Location: .?action=list_files');
+                exit;
+            }
+        }
+    }
+
     if (!isset($_FILES['upload_file']) || !is_array($_FILES['upload_file'])) {
         $_SESSION['files_error'] = 'No file was provided for upload.';
         header('Location: .?action=list_files');
@@ -116,7 +131,7 @@ if ($action === 'upload_file') {
         $storage = build_storage_client();
         $bucket = $storage->bucket(GCS_BUCKET_NAME);
 
-        $object_name = build_object_name($user_id, $upload['name'] ?? 'file');
+        $object_name = build_object_name($upload_user_id, $upload['name'] ?? 'file');
         $file_name = build_file_name($upload['name'] ?? 'file');
         $content_type = format_content_type($upload['type'] ?? 'application/octet-stream');
         $size_bytes = isset($upload['size']) ? (int) $upload['size'] : 0;
@@ -143,7 +158,7 @@ if ($action === 'upload_file') {
             $file_name,
             $content_type,
             $size_bytes,
-            $user_id
+            $upload_user_id
         );
 
         $_SESSION['files_message'] = 'File uploaded successfully.';
@@ -213,8 +228,15 @@ if ($action === 'upload_file') {
     header('Location: .?action=list_files' . $message_query);
     exit;
 } else if ($action === 'list_files') {
+    $upload_target_users = [];
+    $selected_upload_user_id = $user_id;
     $created_by_filter = null;
     if ($is_superuser) {
+        $upload_target_users = $users_db->get_all_users();
+        usort($upload_target_users, function ($a, $b) {
+            return strcasecmp((string) ($a['email'] ?? ''), (string) ($b['email'] ?? ''));
+        });
+
         $requested_created_by = filter_input(INPUT_GET, 'created_by', FILTER_VALIDATE_INT);
         if ($requested_created_by !== null && $requested_created_by !== false && $requested_created_by > 0) {
             $created_by_filter = (int) $requested_created_by;
