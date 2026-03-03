@@ -41,6 +41,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/property/index.php?action=list_properties">Properties</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/files/index.php?action=list_files">Files</a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav ml-auto align-items-center">
                     <li class="nav-item">
