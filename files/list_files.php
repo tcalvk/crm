@@ -42,6 +42,19 @@ function format_file_size($size_bytes) {
         <div class="card-body">
             <form action="index.php" method="post" enctype="multipart/form-data" class="form-inline">
                 <input type="hidden" name="action" value="upload_file">
+                <?php if ($is_superuser) : ?>
+                    <div class="form-group mr-2 mb-2">
+                        <label class="mr-2 mb-0" for="upload_user_id">Upload For</label>
+                        <select name="upload_user_id" id="upload_user_id" class="form-control">
+                            <?php foreach ($upload_target_users as $target_user) : ?>
+                                <?php $target_user_id = isset($target_user['userId']) ? (int) $target_user['userId'] : 0; ?>
+                                <option value="<?php echo $target_user_id; ?>" <?php echo $target_user_id === (int) $selected_upload_user_id ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($target_user['email'] ?? ''); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                <?php endif; ?>
                 <div class="form-group mr-2 mb-2">
                     <input type="file" name="upload_file" class="form-control-file" required>
                 </div>
