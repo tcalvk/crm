@@ -27,15 +27,10 @@ foreach ($contracts as $contract) :
     $contract_id = $contract['ContractId'];
     $contacts = $contact_db->get_contacts($contract_id);
 
-    ///
-    ///Get the email addresses for the contacts
-    ////
-    foreach ($contacts as $contact) : 
+    $email_recipients = [];
+    foreach ($contacts as $contact) :
         $email_recipients[] = $contact['Email'];
     endforeach;
-    ////
-    ////
-    ///
 
     $options = new Options;
     $options->setChroot(__DIR__);
@@ -101,10 +96,12 @@ foreach ($contracts as $contract) :
     file_put_contents("statements/" . "property" . $property_id . "_" . $date_file . ".pdf", $output);
     unset($pdf);
 
-    // Get email password 
-    $email_account_type = 'external';
-    $email_password = $email_server->get_email_password($email_account_type);
-    $send_email = $email_server->send_statement($email_recipients, $property_id, $date_file, $date_formatted, $company_name, $email_password);
+    // Send statement email only if there are recipients
+    if (!empty($email_recipients)) {
+        $email_account_type = 'external';
+        $email_password = $email_server->get_email_password($email_account_type);
+        $send_email = $email_server->send_statement($email_recipients, $property_id, $date_file, $date_formatted, $company_name, $email_password);
+    }
 
     // Log the statement in the database
     $completed_date = date("Y-m-d");
