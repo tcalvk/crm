@@ -15,6 +15,21 @@ $action = filter_input(INPUT_POST, 'action');
             $action = 'landing';
         }
     }
+
+if ($action == 'logout') {
+    $_SESSION = array();
+    session_destroy();
+    $name = session_name();
+    $expire = strtotime('-1 year');
+    $params = session_get_cookie_params();
+    $path = $params['path'];
+    $domain = $params['domain'];
+    $secure = $params['secure'];
+    $httponly = $params['httponly'];
+    setcookie($name, '', $expire, $path, $domain, $secure, $httponly);
+    header("Location: login.php");
+    exit;
+}
     
 if (!isset($_SESSION["logged_in"])) {
 
@@ -174,18 +189,6 @@ if (!isset($_SESSION["logged_in"])) {
                 header("Location: login.php?message=Email verified. Please login.");
             }
         }
-    } else if ($action == 'logout') {
-        $_SESSION = array();
-        session_destroy();
-        $name = session_name();
-        $expire = strtotime('-1 year');
-        $params = session_get_cookie_params();
-        $path = $params['path'];
-        $domain = $params['domain'];
-        $secure = $params['secure'];
-        $httponly = $params['httponly'];
-        setcookie($name, '', $expire, $path, $domain, $secure, $httponly);
-        header("Location: login.php");
     } else if ($action == 'landing') {
         header("Location: landing/");
     }
