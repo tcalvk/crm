@@ -4,7 +4,7 @@ session_start();
 class UserInvitesDB {
     public function invite_code_exists($invite_code) {
         $db = Database::getDB();
-        $query = 'select count(*) as count from userinvites where InviteCode = :inviteCode';
+        $query = 'select count(*) as count from UserInvites where InviteCode = :inviteCode';
         $statement = $db->prepare($query);
         $statement->bindValue(':inviteCode', $invite_code);
         $statement->execute();
@@ -15,7 +15,7 @@ class UserInvitesDB {
 
     public function create_invite($email, $invite_code, $status = 'Pending') {
         $db = Database::getDB();
-        $query = 'insert into userinvites (Email, InviteCode, Status)
+        $query = 'insert into UserInvites (Email, InviteCode, Status)
                  values (:email, :inviteCode, :status)';
         $statement = $db->prepare($query);
         $statement->bindValue(':email', $email);
@@ -28,7 +28,7 @@ class UserInvitesDB {
 
     public function get_invites_paginated($limit, $offset) {
         $db = Database::getDB();
-        $query = 'select * from userinvites order by CreatedAt desc limit :limit offset :offset';
+        $query = 'select * from UserInvites order by CreatedAt desc limit :limit offset :offset';
         $statement = $db->prepare($query);
         $statement->bindValue(':limit', $limit, PDO::PARAM_INT);
         $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
@@ -40,7 +40,7 @@ class UserInvitesDB {
 
     public function get_invite_count() {
         $db = Database::getDB();
-        $query = 'select count(*) as count from userinvites';
+        $query = 'select count(*) as count from UserInvites';
         $statement = $db->prepare($query);
         $statement->execute();
         $row = $statement->fetch();
@@ -50,7 +50,7 @@ class UserInvitesDB {
 
     public function get_invites_paginated_search($limit, $offset, $search) {
         $db = Database::getDB();
-        $query = 'select * from userinvites 
+        $query = 'select * from UserInvites 
                   where Email like :search
                      or InviteCode like :search
                      or Status like :search
@@ -68,7 +68,7 @@ class UserInvitesDB {
 
     public function get_invite_count_search($search) {
         $db = Database::getDB();
-        $query = 'select count(*) as count from userinvites 
+        $query = 'select count(*) as count from UserInvites 
                   where Email like :search
                      or InviteCode like :search
                      or Status like :search';
@@ -82,7 +82,7 @@ class UserInvitesDB {
 
     public function get_pending_invite_by_code($invite_code) {
         $db = Database::getDB();
-        $query = 'select * from userinvites where InviteCode = :inviteCode and Status = "Pending"';
+        $query = 'select * from UserInvites where InviteCode = :inviteCode and Status = "Pending"';
         $statement = $db->prepare($query);
         $statement->bindValue(':inviteCode', $invite_code);
         $statement->execute();
@@ -93,7 +93,7 @@ class UserInvitesDB {
 
     public function mark_invite_accepted($invite_code) {
         $db = Database::getDB();
-        $query = 'update userinvites set Status = "Accepted" where InviteCode = :inviteCode';
+        $query = 'update UserInvites set Status = "Accepted" where InviteCode = :inviteCode';
         $statement = $db->prepare($query);
         $statement->bindValue(':inviteCode', $invite_code);
         $statement->execute();
