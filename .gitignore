@@ -3,3 +3,6 @@ config/
 react_frontend/build/
 build/
 credentials/
+
+.env.local
+.env.production
