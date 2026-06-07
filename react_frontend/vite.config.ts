@@ -4,7 +4,9 @@
   import path from 'path';
 
   export default defineConfig({
-    base: '/landing/',
+    // Use relative asset paths so the built landing page works when the CRM
+    // app is served from a subdirectory such as http://localhost/crm/.
+    base: './',
     plugins: [react()],
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
@@ -52,7 +54,8 @@
     },
     build: {
       target: 'esnext',
-      outDir: 'build',
+      outDir: '../landing',
+      emptyOutDir: true,
     },
     server: {
       port: 3000,
