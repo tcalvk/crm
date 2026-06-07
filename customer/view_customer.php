@@ -7,6 +7,62 @@ if (!isset($_SESSION["logged_in"])) {
 include '../view/header.php';
 ?>
 
+<style>
+.customer-info-card {
+    border: 1px solid #dedede;
+    border-radius: 6px;
+    box-shadow: none;
+}
+
+.customer-info-card .card-body {
+    padding: 2rem 2.25rem 2.25rem;
+}
+
+.customer-info-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 5rem;
+    row-gap: 1.85rem;
+    margin: 0;
+}
+
+.customer-info-item {
+    color: #212529;
+    font-size: 1.35rem;
+    line-height: 1.35;
+    margin: 0;
+}
+
+.customer-info-item dt,
+.customer-info-item dd {
+    display: inline;
+    margin: 0;
+}
+
+.customer-info-item dt {
+    font-weight: 700;
+}
+
+.customer-info-item dd {
+    font-weight: 400;
+}
+
+@media (max-width: 767.98px) {
+    .customer-info-card .card-body {
+        padding: 1.5rem;
+    }
+
+    .customer-info-grid {
+        grid-template-columns: 1fr;
+        row-gap: 1.25rem;
+    }
+
+    .customer-info-item {
+        font-size: 1.1rem;
+    }
+}
+</style>
+
 <main class="mt-3">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
@@ -23,20 +79,37 @@ include '../view/header.php';
         </div>
     </div>
 
-    <div class="card mb-4">
+    <div class="card mb-4 customer-info-card">
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <p><strong>Customer ID:</strong> <?php echo $customer_info['CustomerId']; ?></p>
-                    <p><strong>Address 1:</strong> <?php echo htmlspecialchars($customer_info['Address1']); ?></p>
-                    <p><strong>Address 2:</strong> <?php echo $customer_info['Address2'] ? htmlspecialchars($customer_info['Address2']) : '—'; ?></p>
-                    <p><strong>Address 3:</strong> <?php echo $customer_info['Address3'] ? htmlspecialchars($customer_info['Address3']) : '—'; ?></p>
-                </div>
-                <div class="col-md-6">
-                    <p><strong>City:</strong> <?php echo htmlspecialchars($customer_info['City']); ?></p>
-                    <p><strong>State:</strong> <?php echo htmlspecialchars($customer_info['StateId']); ?></p>
-                    <p><strong>Zip:</strong> <?php echo htmlspecialchars($customer_info['Zip']); ?></p>
-                </div>
+            <div class="customer-info-grid" aria-label="Customer information">
+                <dl class="customer-info-item">
+                    <dt>Customer ID:</dt>
+                    <dd><?php echo htmlspecialchars($customer_info['CustomerId']); ?></dd>
+                </dl>
+                <dl class="customer-info-item">
+                    <dt>City:</dt>
+                    <dd><?php echo htmlspecialchars($customer_info['City']); ?></dd>
+                </dl>
+                <dl class="customer-info-item">
+                    <dt>Address 1:</dt>
+                    <dd><?php echo htmlspecialchars($customer_info['Address1']); ?></dd>
+                </dl>
+                <dl class="customer-info-item">
+                    <dt>State:</dt>
+                    <dd><?php echo htmlspecialchars($customer_info['StateId']); ?></dd>
+                </dl>
+                <dl class="customer-info-item">
+                    <dt>Address 2:</dt>
+                    <dd><?php echo $customer_info['Address2'] ? htmlspecialchars($customer_info['Address2']) : '—'; ?></dd>
+                </dl>
+                <dl class="customer-info-item">
+                    <dt>Zip:</dt>
+                    <dd><?php echo htmlspecialchars($customer_info['Zip']); ?></dd>
+                </dl>
+                <dl class="customer-info-item">
+                    <dt>Address 3:</dt>
+                    <dd><?php echo $customer_info['Address3'] ? htmlspecialchars($customer_info['Address3']) : '—'; ?></dd>
+                </dl>
             </div>
         </div>
     </div>
