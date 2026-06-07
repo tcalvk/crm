@@ -98,29 +98,27 @@ include '../view/header.php';
                     <?php if (empty($statements)) : ?>
                         <p class="mb-0 text-muted">No statements found.</p>
                     <?php else : ?>
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Statement Number</th>
-                                        <th scope="col">Created Date</th>
-                                        <th scope="col">Total Amount</th>
-                                        <th scope="col">Property Name</th>
-                                        <th scope="col">Property Address 1</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <?php foreach ($statements as $statement) : ?>
-                                    <tr>
-                                        <td><a href="../log_statements/index.php?action=view_statement&statement_number=<?php echo $statement['StatementNumber']; ?>"><?php echo htmlspecialchars($statement['StatementNumber']); ?></a></td>
-                                        <td><?php echo htmlspecialchars($statement['CreatedDate']); ?></td>
-                                        <td>$<?php echo htmlspecialchars($statement['TotalAmt']); ?></td>
-                                        <td><?php echo htmlspecialchars($statement['PropertyName']); ?></td>
-                                        <td><?php echo htmlspecialchars($statement['Address1']); ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                        <div class="list-group">
+                            <?php foreach ($statements as $statement) : ?>
+                                <a class="list-group-item list-group-item-action" href="../log_statements/index.php?action=view_statement&statement_number=<?php echo $statement['StatementNumber']; ?>">
+                                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                                        <div class="mb-3 mb-md-0">
+                                            <div class="text-muted text-uppercase small font-weight-bold">Statement Number</div>
+                                            <div class="h5 mb-0"><?php echo htmlspecialchars($statement['StatementNumber']); ?></div>
+                                        </div>
+                                        <div class="d-flex flex-column flex-sm-row text-md-right">
+                                            <div class="mb-3 mb-sm-0 mr-sm-5">
+                                                <div class="text-muted text-uppercase small font-weight-bold">Created Date</div>
+                                                <div><?php echo htmlspecialchars($statement['CreatedDate']); ?></div>
+                                            </div>
+                                            <div>
+                                                <div class="text-muted text-uppercase small font-weight-bold">Total Amount</div>
+                                                <div>$<?php echo htmlspecialchars(number_format((float)$statement['TotalAmt'], 2)); ?></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            <?php endforeach; ?>
                         </div>
                     <?php endif; ?>
                     <div class="d-flex justify-content-center mt-3">
