@@ -16,8 +16,9 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
   const handleSignupSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Redirect to signup with invite code
-    window.location.href = `https://corsairetech.com?action=signup&invite_code=${encodeURIComponent(signupCode)}`;
+    // Redirect to the PHP app relative to the landing page so local
+    // subdirectory installs like http://localhost/crm/ work correctly.
+    window.location.href = `../index.php?action=signup&invite_code=${encodeURIComponent(signupCode)}`;
   };
 
   const handleLoginSubmit = (e: React.FormEvent) => {
@@ -70,7 +71,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 </button>
                 
                 <a
-                  href="https://corsairetech.com?action=login"
+                  href="../index.php?action=login"
                   className="w-full px-6 py-4 border-2 border-gray-300 text-gray-700 rounded-lg hover:border-gray-400 transition-colors flex items-center justify-center gap-3"
                 >
                   <LogIn className="w-5 h-5" />
