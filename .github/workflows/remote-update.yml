@@ -6,7 +6,32 @@ on:
       - main
 
 jobs:
+  composer-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Validate composer files
+        run: composer validate --no-check-publish
+
+      - name: Install dependencies
+        run: composer install --no-dev --prefer-dist --no-interaction
+
+      - name: Check platform requirements
+        run: composer check-platform-reqs
+
+      - name: Verify Composer autoload
+        run: php -r "require 'vendor/autoload.php'; echo 'autoload ok'.PHP_EOL;"
+
   deploy:
+    needs: composer-check
     runs-on: ubuntu-latest
 
     steps:
