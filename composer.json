@@ -1,8 +1,14 @@
 {
     "require": {
-        "dompdf/dompdf": "1.1.0",
+        "php": "^8.2",
+        "dompdf/dompdf": "^3.0",
         "stripe/stripe-php": "^19.0",
         "google/cloud-storage": "^1.49",
         "robmorgan/phinx": "^0.16.11"
+    },
+    "config": {
+        "platform": {
+            "php": "8.2.30"
+        }
     }
 }
